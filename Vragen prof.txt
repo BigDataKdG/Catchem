@@ -1,0 +1,2 @@
+-	Wat kunnen we verwachten van de client app? Bv: welke queries mag de helpdesk doen, met wildcards?
+- 	Verbinding gegevens client-app: hoe komt latitude and longitude binnen?

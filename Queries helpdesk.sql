@@ -14,9 +14,12 @@ FROM dbo.user_table;
 select first_name, last_name
 FROM dbo.user_table;
 
+select first_name, last_name, mail, number, street
+FROM dbo.user_table;
+
 
 -- using wildcards at the beginning make for very inefficient queries as it disables index usage 
--- Think about how names should be searched; full wildcard is alwauys inefficient, perhaps use n.gram tables?
+-- Think about how names should be searched; full wildcard is always inefficient, perhaps use n.gram tables?
 
 select last_name
 FROM dbo.user_table
