@@ -33,11 +33,26 @@ values (newid(), 3, 1,0xB3105970E96449C4A26602B0F2694FFB , 0x6234F00E0E994A6D8A7
 
 INSERT into dbo.treasure_stages(treasure_id,stages_id)
 values ( ?, ?); -- how to make connection? with scoope_identity? or with insert.output? 
+-- do you do this with a trigger?
+-- or does the client app indicate which stages belong to a treasure?
+-- sequencing wise: is a cross-reference table faster compared to including it into the table?
+
+INSERT INTO dbo.treasure_stages
+	SELECT 'SELECT', treasure_id, stages_id
+	FROM dbo.treasure 
+	Inner join 
 
 -- insert logs
 INSERT into dbo.treasure_log(id, description, log_time, log_type, session_start, hunter_id, treasure_id) -- argument to session_start is wrong, how to pass this argument? hunter_id should current user. How to pass treasure_id?
 values (newid(), 'test', SYSDATETIME(), 1, SYSDATETIME(), 0x9EA59528D0C141F78DB9BDE546A576EF, 0x56A0B2C1931A4E16A94AD0B0C1B746F8); 
 
 
+select *
+From dbo.treasure_stages;
 
+select *
+From dbo.treasure;
+
+select *
+From dbo.stage;
  
