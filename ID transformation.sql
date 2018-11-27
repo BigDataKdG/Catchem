@@ -1,9 +1,24 @@
+
+-- creating a snapshot of catchem
+CREATE DATABASE Catchem_dbss001 ON  
+( NAME = catchem, FILENAME =   
+'C:\Program Files\Microsoft SQL Server\MSSQL14.SQLSERVER2017\MSSQL\DATA\catchemsnap.ss' )  
+AS SNAPSHOT OF catchem;  
+GO  
+-- reverting catchem 
+
+USE master;  
+RESTORE DATABASE catchem FROM DATABASE_SNAPSHOT = 'Catchem_dbss001';  
+GO
+
 -- All ID's are stored as binary(255), meaning that the binary value takes up 255 bytes.
 -- This inflates the computation time (18s), I/O cost= 292.417 and CPU cost =1.97 
 -- Solution is to store this ID as a binary, legnth 16byte. Why 16? The identifier was is an hexadecimal UUID which need 16 byte to store
 -- The computation time is reduced to 15s, I/O cost = 0 and CPU cost = 0.179
 -- This is done for all identifiers
 -- Remark: one possible problem with storing it binary is that different implementation may change the order of the bytes when storing. So you might also store it as a char.
+
+use catchem; 
 
 -- Diagnostic results
 SELECT id
@@ -37,6 +52,12 @@ DROP constraint "FK2civl72k0mvj6ox420p7lh8do";
 ALTER TABLE dbo.treasure_log
 ALTER COLUMN treasure_id binary(16) NOT NULL; 
 
+ALTER TABLE dbo.treasure_stages
+DROP constraint "FK14l2mfyurovu79hsams09j1ki";
+
+ALTER TABLE dbo.treasure_stages
+ALTER COLUMN treasure_id binary(16) NOT NULL; 
+
 ALTER TABLE dbo.treasure
 DROP constraint "PK__treasure__3213E83F6E1FAC76";
 
@@ -52,6 +73,11 @@ REFERENCES dbo.treasure (id)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
 
+ALTER TABLE dbo.treasure_stages
+ADD constraint FK_treasure_stages foreign key(treasure_id)
+REFERENCES dbo.treasure (id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
 --  To change Hunter id, one must change the user_id, but also the two FK tied to dbo.treasure(owner and treasure)
 
@@ -84,9 +110,7 @@ ON UPDATE CASCADE;
 
 ALTER TABLE dbo.treasure_log
 ADD constraint FK_hunterid foreign key(hunter_id)
-REFERENCES dbo.user_table (id)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
+REFERENCES dbo.user_table (id);
 
 -- dropping stage_id; wordt gerefereerd vanuit treasure_stages (verwijder eerst)
 
@@ -116,9 +140,7 @@ ON UPDATE CASCADE;
 
 ALTER TABLE dbo.treasure_stages
 ADD constraint FK_treasurestage foreign key(treasure_id)
-REFERENCES dbo.treasure (id)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
+REFERENCES dbo.treasure (id);
 
 ALTER TABLE dbo.treasure_stages
 add CONSTRAINT UK_stages_id UNIQUE(stages_id)
