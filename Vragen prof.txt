@@ -1,2 +1,3 @@
 -	Wat kunnen we verwachten van de client app? Bv: welke queries mag de helpdesk doen, met wildcards?
 - 	Verbinding gegevens client-app: hoe komt latitude and longitude binnen?
+- 	Moderen: gewoon de laatste post of op bepaalde key words? n.gram table maken
