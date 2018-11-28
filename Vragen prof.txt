@@ -1,3 +1,36 @@
--	Wat kunnen we verwachten van de client app? Bv: welke queries mag de helpdesk doen, met wildcards?
-- 	Verbinding gegevens client-app: hoe komt latitude and longitude binnen?
-- 	Moderen: gewoon de laatste post of op bepaalde key words? n.gram table maken
+-	Vorm van de opdracht, enkel queries schrijven om te optimaliseren (realistische queries) of effectief een operationeel model (wat veel testen inhoud)?
+- 	(!)tijd tussen starten van een quest (normaliseren op 0):duur van de quest (absolute waarde gebruiken)
+- 	(!)treasure found = (2) is het enige dat voorkomt
+- 	Tuning advisor is een goed startpunt (indexen, parameters van db veranderen, andere indexen, memory optimized)
+- 	Zet de dingen erin dat ook niet gelukt is (goed kunt verklaren = meerwaarden)
+- 	Dossier met effecten screenshots (zet in een word documentje!)
+- 	full text search, synoniemen zijn zelfs mogelijk
+- 	XSL ingeladen krijgen en dan pas de UUID (base64 ->), insert statements maakt, niet kei effecient (in elke insert de conversie)
+	- Krijgen het niet zomaar gedraaid
+	- Pentaho job maken (meer geheugen geven)
+- 	Security: valt weg 
+ 	
+
+- 	datawarehousing: heel belangrijk, alles wat er staat te doen, zonder na te denken hoe het er hoort uit te ziet. neem eerst slides door, neem de basis regels in acht (hier worden op afgemaakt)
+- 	regen dimensie: bij een bepaalde log; regen of niet? Informatie niet beschikbaar, data verrijken met extra data (maar API niet te doen), we gaan dat zelf inladen, API aan te spreken met huidige situatie, 10 willekeurige steden => kopelen over juiste logs (nadenken over wanneer je dit uitwerkt), je neemt een onbekende regen situatie creeren. Op examen, pentha transformatie, waar je op klikt & dit genereert
+- 	no SQL gedeelte is iets minder zwaar, ook daar, gebruik mongodb waarvoor het gemaakt is
+
+- 	
+
+	- Dossier: Is dit trouwens OK om af te geven als script file?
+-	Client app:
+	- Met welke functionaliteiten moeten we rekening houden?
+		- Helpdesk: kan die zoeken met wildcards of enkel vaste woorden?
+		- Moderen, gewoon de laatste # posts of op bepaalde key words?
+		- 
+	- Welke data komt binnen op welke manier?
+		- Longitud/lat 
+	- Hoe komt deze data binnen?
+		- Genereert bv de applicatie de ID? Wij generen dit nu zelf
+	- Security:
+		- Groepen met 3 moeten rollen aanmaken, wij niet? SQL injection; hoe kunnnen we dit schrijven?
+
+- 	Cross-referentie tabel maken: zijn we hier op de juiste weg?
+
+- 	Informatie over tuning advisor: wat is het debiet, of enkel current loads (hoe wordt dit gesimuleerd?)
+- 	XLS
