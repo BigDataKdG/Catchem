@@ -25,9 +25,6 @@ values (newid(), 'test', 'test', 'test' ,'000', 'test', 0x3DBB2210E9D34B4FA9E52E
 --		add owner_id from current user (in dbo.treasure)
 
 
-DECLARE @Idstage binary(16)
-DECLARE @Idtreasure binary(16)
-
 DECLARE @temptreasure TABLE (treasure_id binary(16))
 DECLARE @tempstage TABLE (stages_id binary(16))
 DECLARE @temp TABLE (treasure_id binary(16), stages_id binary(16))
@@ -51,6 +48,9 @@ DECLARE @temp TABLE (treasure_id binary(16), stages_id binary(16))
 	
 	select *
 	FROM @temp  ;
+
+	select *
+	FROm dbo.stage;
 
 
 -- insert logs
