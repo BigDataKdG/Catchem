@@ -1,3 +1,6 @@
+- Pentaho security
+
+
 -	Vorm van de opdracht, enkel queries schrijven om te optimaliseren (realistische queries) of effectief een operationeel model (wat veel testen inhoud)?
 - 	(!)tijd tussen starten van een quest (normaliseren op 0):duur van de quest (absolute waarde gebruiken)
 - 	(!)treasure found = (2) is het enige dat voorkomt
