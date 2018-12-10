@@ -1,4 +1,5 @@
-- Pentaho security
+- Pentaho security?
+- 
 
 
 -	Vorm van de opdracht, enkel queries schrijven om te optimaliseren (realistische queries) of effectief een operationeel model (wat veel testen inhoud)?
