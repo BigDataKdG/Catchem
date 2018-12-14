@@ -673,7 +673,7 @@ Weeks run from Sunday to Saturday.  If you need something else, you will need to
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>C:\Users\Fheylen\OneDrive\Bureablad2\ware\feestdagen.csv</filename>
+    <filename>C:\Users\Fheylen\Catchem\Module 3 Data warehousing\Tutorial job\feestdagen.csv</filename>
     <filename_field/>
     <rownum_field/>
     <include_filename>N</include_filename>
@@ -719,7 +719,7 @@ Weeks run from Sunday to Saturday.  If you need something else, you will need to
     </remotesteps>
     <GUI>
       <xloc>784</xloc>
-      <yloc>368</yloc>
+      <yloc>432</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2624,59 +2624,45 @@ var DAY_OF_WEEK_SORT_NAME = "Day " + DayOfWeek.getInteger();</jsScript_script>
       </field>
       <field>
         <name>DAYS_IN_MONTH_QTY</name>
-        <rename/>
       </field>
       <field>
         <name>DATE_SK</name>
-        <rename/>
       </field>
       <field>
         <name>DAY_DESC</name>
-        <rename/>
       </field>
       <field>
         <name>WEEK_SK</name>
-        <rename/>
       </field>
       <field>
         <name>DAY_DATE</name>
-        <rename/>
       </field>
       <field>
         <name>week_name</name>
-        <rename/>
       </field>
       <field>
         <name>week_of_month_number</name>
-        <rename/>
       </field>
       <field>
         <name>week_of_month_name</name>
-        <rename/>
       </field>
       <field>
         <name>month_sk</name>
-        <rename/>
       </field>
       <field>
         <name>quarter_sk</name>
-        <rename/>
       </field>
       <field>
         <name>year_sk</name>
-        <rename/>
       </field>
       <field>
         <name>year_sort_number</name>
-        <rename/>
       </field>
       <field>
         <name>day_of_week_sort_name</name>
-        <rename/>
       </field>
       <field>
         <name>publieke_feestdag</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
