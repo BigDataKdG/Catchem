@@ -152,3 +152,7 @@ ALTER COLUMN city_city_id binary(16) NOT NULL;
 
 ALTER TABLE dbo.user_table
 ALTER COLUMN city_city_id binary(16) NOT NULL; 
+
+
+select *
+FROM dbo.user_table; 
