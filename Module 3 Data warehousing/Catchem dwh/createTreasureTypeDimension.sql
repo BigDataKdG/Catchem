@@ -1,0 +1,1 @@
+CREATE TABLE treasure_found (treasure_id BINARY(16), difficulty int, terrain int, size int);
