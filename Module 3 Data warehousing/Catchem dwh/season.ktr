@@ -628,7 +628,7 @@
     </partitioning>
     <formula>
       <field_name>Season2</field_name>
-      <formula_string>IF(OR([season]=4; [season]=0) ;"Winter"; IF([season]=1; "Lente"; IF([season]=2; "Zomer"; "Herfst")))</formula_string>
+      <formula_string>IF(OR([season]=4; [season]=0) ;"Winter"; IF(AND([season]=1; OR([Month]=3; [Month]=4; [Month]=5)) ; "Lente"; IF([season]=2; "Zomer"; "Herfst")))</formula_string>
       <value_type>String</value_type>
       <value_length>-1</value_length>
       <value_precision>-1</value_precision>
@@ -643,7 +643,7 @@
     </remotesteps>
     <GUI>
       <xloc>800</xloc>
-      <yloc>128</yloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -769,7 +769,7 @@
     </partitioning>
     <connection>Dwh Catchem</connection>
     <schema/>
-    <table>Season23</table>
+    <table>Season26</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
@@ -794,8 +794,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>928</xloc>
-      <yloc>272</yloc>
+      <xloc>944</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
