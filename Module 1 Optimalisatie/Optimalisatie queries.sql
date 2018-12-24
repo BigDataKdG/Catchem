@@ -168,20 +168,83 @@ CREATE NONCLUSTERED INDEX nclustered_treasure_id_log_incl
 
  -- the helpdesk can moderate the posts
 
+
  -- dbo.user_table
+ 
  -- helpdesk can get lists of users
- select first_name, last_name
+SELECT first_name, last_name
 FROM dbo.user_table;
 
-
-select first_name, last_name
+select last_name, first_name id
 FROM dbo.user_table
-WHERE first_name = 'Yanis';
+WITH (index(nclustered_user_incl3))
+WHERE first_name = 'EVA';
 
+select last_name, first_name id
+FROM dbo.user_table
+WHERE first_name = 'EVA';
+
+select last_name, first_name,id
+FROM dbo.user_table
+WHERE city_city_id = 0x1992A52F3BEC4181A1A165B12B28C8FD
+AND first_name = 'Eva';
+
+select last_name, first_name,id
+FROM dbo.user_table
+WHERE city_city_id = 0x1992A52F3BEC4181A1A165B12B28C8FD
+AND first_name = 'Eva';
+
+
+-- slow ndex
 CREATE NONCLUSTERED INDEX nclustered_user_incl
     ON dbo.user_table (id)
 	INCLUDE (first_name, last_name); 
+-- best
+CREATE NONCLUSTERED INDEX nclustered_user_incl3
+    ON dbo.user_table (first_name)
+	INCLUDE (last_name); 
+-- equivalent to best?
+CREATE NONCLUSTERED INDEX nclustered_user_incl2
+   ON dbo.user_table (first_name, last_name); 
 
- select *
-FROM dbo.user_table;
+   CREATE NONCLUSTERED INDEX nclustered_user_incl4
+   ON dbo.user_table (last_name, first_name); 
 
+   CREATE NONCLUSTERED INDEX nclustered_user_incl5
+   ON dbo.user_table (city_city_id, last_name, first_name); 
+
+   CREATE NONCLUSTERED INDEX nclustered_user_incl6
+   ON dbo.user_table (city_city_id)
+   INCLUDE (first_name, last_name); 
+
+   CREATE NONCLUSTERED INDEX nclustered_user_incl7
+   ON dbo.user_table ( first_name,city_city_id, last_name); 
+
+
+ select first_name, count(*) count
+FROM dbo.user_table
+group by first_name
+oRDER BY count desc;
+
+select *
+FROM dbo.user_table; 
+
+--- Partioning 
+  select *
+  FROM dbo.User_table
+  ORDER BY logs_found;
+
+
+  select u.id, count(*) treasures
+  FROM dbo.user_table u
+  LEFT JOIN dbo.treasure t ON u.id =t.owner_id
+  GROUP BY u.id; 
+
+
+  select id
+  FROM dbo.user_table;
+
+
+  select owner_id, count(*) t_owned
+  FROM dbo.treasure
+  GROUP BY owner_id;
