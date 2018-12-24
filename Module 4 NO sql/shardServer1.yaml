@@ -1,0 +1,9 @@
+storage:
+  dbPath: "/data/shardServer1"
+sharding:
+   clusterRole: shardsvr
+replication:
+   replSetName: shardServer1
+net:
+   bindIp: localhost
+   port: 27002

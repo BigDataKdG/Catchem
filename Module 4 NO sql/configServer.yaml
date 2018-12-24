@@ -1,0 +1,9 @@
+storage:
+  dbPath: "/data/configServer"
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: configServer
+net:
+  bindIp: localhost
+  port: 27001
