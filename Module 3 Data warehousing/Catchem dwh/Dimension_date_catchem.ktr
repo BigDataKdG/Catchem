@@ -486,20 +486,20 @@ Weeks run from Sunday to Saturday.  If you need something else, you will need to
   </notepads>
   <connection>
     <name>Dwh Catchem</name>
-    <server>127.0.0.1</server>
+    <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>Dwh Catchem</database>
+    <database>${DB_NAME_DWH}</database>
     <port>1433</port>
-    <username>DB4</username>
-    <password>Encrypted 2be98afc86aa7f2e4cb79ce10beb68d8e</password>
+    <username>${DB_USERNAME}</username>
+    <password>${DB_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>SQLSERVER2017</attribute>
+        <attribute>${INSTANCE_NAME}</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -1152,7 +1152,7 @@ Weeks run from Sunday to Saturday.  If you need something else, you will need to
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema/>
+      <schema>dbo</schema>
       <table>Dimension_date</table>
       <key>
         <name>DATE_SK</name>

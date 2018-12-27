@@ -442,21 +442,21 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem</name>
+    <name>catchem_dwh</name>
     <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>catchem</database>
+    <database>${DB_NAME_DWH}</database>
     <port>1433</port>
-    <username>sa</username>
-    <password>Encrypted 2be98afc86aa7f2e49f1fad75d890fd8e</password>
+    <username>${DB_USERNAME}</username>
+    <password>${DB_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>MSSQL2017</attribute>
+        <attribute>${INSTANCE_NAME}</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -738,7 +738,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
+    <connection>catchem_dwh</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
@@ -861,8 +861,8 @@ FROM dbo.city
       </output>
     </remotesteps>
     <GUI>
-      <xloc>145</xloc>
-      <yloc>145</yloc>
+      <xloc>128</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

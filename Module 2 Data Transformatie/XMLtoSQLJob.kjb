@@ -392,7 +392,7 @@
       <sql/>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>T</sqlfromfile>
-      <sqlfilename>${localFileStructure}Module 2 Data Transformatie\loadCities.sql</sqlfilename>
+      <sqlfilename>${LOCAL_FILE_STRUCTURE}Module 2 Data Transformatie\loadCities.sql</sqlfilename>
       <sendOneStatement>T</sendOneStatement>
       <connection>Catchem</connection>
       <parallel>N</parallel>
