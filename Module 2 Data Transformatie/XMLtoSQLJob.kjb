@@ -355,7 +355,7 @@
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>C:\Users\jens_\Downloads\Documents\Catchem\Pentaho\xsl_transformation.ktr</filename>
+      <filename>${localFileStructure}Module 2 Data Transformatie\xsl_transformation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
