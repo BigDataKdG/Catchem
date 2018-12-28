@@ -565,7 +565,7 @@
     <hop>
       <from>Formula</from>
       <to>Table output</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Table input 2</from>
