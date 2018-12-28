@@ -531,8 +531,8 @@
     </GUI>
   </step>
   <step>
-    <name>XSL Transformation</name>
-    <type>XSLT</type>
+    <name>Select values</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -541,17 +541,24 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <xslfilename>C:\Users\jens_\Downloads\Documents\Catchem\Pentaho\XmlToSql.xsl</xslfilename>
-    <fieldname>File content</fieldname>
-    <resultfieldname>result</resultfieldname>
-    <xslfilefield/>
-    <xslfilefielduse>N</xslfilefielduse>
-    <xslfieldisafile>N</xslfieldisafile>
-    <xslfactory>SAXON</xslfactory>
-    <parameters>
-    </parameters>
-    <outputproperties>
-    </outputproperties>
+    <fields>
+      <field>
+        <name>File content</name>
+      </field>
+      <field>
+        <name>File size</name>
+      </field>
+      <field>
+        <name>result</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <remove>
+        <name>File content</name>
+      </remove>
+      <remove>
+        <name>File size</name>
+      </remove>
+    </fields>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -560,8 +567,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>192</yloc>
+      <xloc>336</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -590,7 +597,7 @@
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>\D:\data-integration\file</name>
+      <name>${LOCAL_FILE_STRUCTURE}Module 2 Data Transformatie\loadCities</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>sql</extention>
@@ -634,8 +641,8 @@
     </GUI>
   </step>
   <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
+    <name>XSL Transformation</name>
+    <type>XSLT</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -644,27 +651,17 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <fields>
-      <field>
-        <name>File content</name>
-        <rename/>
-      </field>
-      <field>
-        <name>File size</name>
-        <rename/>
-      </field>
-      <field>
-        <name>result</name>
-        <rename/>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <remove>
-        <name>File content</name>
-      </remove>
-      <remove>
-        <name>File size</name>
-      </remove>
-    </fields>
+    <xslfilename>${localFileStructure}Module 2 Data Transformatie\XmlToSql.xsl</xslfilename>
+    <fieldname>File content</fieldname>
+    <resultfieldname>result</resultfieldname>
+    <xslfilefield/>
+    <xslfilefielduse>N</xslfilefielduse>
+    <xslfieldisafile>N</xslfieldisafile>
+    <xslfactory>SAXON</xslfactory>
+    <parameters>
+    </parameters>
+    <outputproperties>
+    </outputproperties>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -673,8 +670,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>224</yloc>
+      <xloc>192</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
