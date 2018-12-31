@@ -1,0 +1,470 @@
+#data science 2:
+
+#les 1: kansverdelingen & kansen
+
+##binom verdeling
+#vragen over repetitieve experimenten
+
+dbinom(x,n,p)
+#x= aantal keer de uitkomst (exact!) voor 
+#n= aantal keer herhaling
+#p= de kans 
+
+# voor ranges (check this again)
+cumsum(dbinom(3,n,p)) #minder dan
+1- cumsum(dbinom(3,n,p)) #meer dan
+
+
+#gemiddelde aantal gebeurtenis, gegeven kans
+# mu = n*p
+
+##Poissionverdeling
+# als een gebeurtenis verschilende keren voorkomt
+
+dpos(x,mu)
+#x = antal keren dat het voorkomt
+#mu = aantal keren het gemiddeld voorkomt
+
+#voor ranges
+cumsum(dpos(x,mu))
+1-cumsum(dpos(x,mu))
+
+#formules
+mu = n*p #verwachte waarden binom
+sqrt(n*p(1-p)) # verwachte standaard afwijking binom
+
+sigma = sqrt(mean) #verwachte standaard afwijking Pois
+
+#normaal verdeling
+dnorm(x, mean=, sd=) #specifieke waarde
+pnorm(x, mean=, sd=) #cummulatieve 
+
+1- pnorm(x, mean=, sd=) # > exacte waarde
+pnorm(x, mean=, sd=)# < exacte waarde
+pnorm(x, mean=0, sd=1)-pnorm(x, mean=0,sd=1)#tussen 2 waarden
+
+
+#les 2 toetsen
+
+data <- read.csv(file="haarkleurbrussel.csv")
+
+#CHI² testing
+#h0= er van uitgaan dat de verdeling evenredig/ niet afwijkt/hetzelfde is
+#data <- rep(c('IO', 'OP', 'MF', 'GC'), c(8,10,10,12))
+observerd  <-table(data)
+expected <- c(5,17,8, 10)#in frequencie, maar werkt ook met percenten!
+X = chisq.test(x=observerd, p=expected, rescale.p=T)
+X$statistic
+X$p.value #kans dat een extremere waarden wordt gevonden (onder de 0.05% = significant, H0= verworpen)
+
+b = 0.99
+m = length(data)
+criticalvalue<- qchisq(b,m-1)
+criticalvalue
+
+
+pnorm(x, mean=, sd=)# kans op een bepaalde waarde
+qnorm(0.99, mean=, sd=) #lengte gegeven een bepaalde kans 
+
+pt(x, df=)
+qt(x, df=)
+
+#intervals met normale verdeling
+##als sigma gekend is of grote steekproef
+#op basis van een steekproef iets zeggen over de populatie
+b= 0.99 
+f = qnorm((1+b)/2) #factor op basis van zekerheid
+m = 11.9#mean(x)
+s = 1 #sd(x)
+n = 100
+links = m - f * s / sqrt(n) 
+rechts = m + f * s / sqrt(n)
+links
+rechts
+
+#of
+a <- 1-b
+m + c(-1,1)*qnorm(1-a/2)*s/sqrt(n) #zekerheid dat populatie gemiddelde tussen deze twee grenzen ligt
+
+
+#testen normaal (standaard afwijking niet gekend)
+#kunnen we een bewering over de populatie weerleggen adhv steekproef?
+n <- 100
+m <- 12
+mo <- 11.9
+s <- 0.1
+z = (mo-m) / (s / sqrt(n)) #z = (mo-m) / s * sqrt(n)
+p <- pnorm(z) * 2
+p
+
+
+#Z-test eenzijdig
+m <- -0.545
+mo <-  -0.539 
+s <- 0.008
+n <- 5
+z <- (mo-m)/(s/sqrt(n)) #Z-score die hoort bij deze specifieke waarde
+z<- pnorm(-abs(z)) #-abs is de waarde 1-, voor een rechter test?
+z
+
+#of
+p <- pnorm(mo, mean = m, sd= s/sqrt(n))
+1-p
+
+qnorm(0.1, mean= -0.545, sd=0.008/sqrt(5), lower.tail=FALSE) #vinden van kritieke waarde (alles wat boven/onder ligt )
+
+
+# T intervallen
+
+#f =factor
+#m = mean
+# n= sample
+# b = betrouwbaarheid
+# s = standaar afwijking
+m <- 11.9
+b <- 0.99
+a <- 0.01
+n <- 100
+f <- qt((1+b)/2, n-1) #qt(1-a/2, n-1)
+s <- 1
+links = m - f * s / sqrt(n) 
+rechts = m + f * s / sqrt(n)
+links
+rechts
+
+#testen t TOETS
+n <- 100
+m <- 12
+mo <- 11.9
+s <- 1
+t = (mo-m) / (s/sqrt(n)) #t = (mo-m) / s *sqrt(n)
+p <- pt(-abs(t), n-1) *2
+p
+
+#↔t-test eenzijdig
+n <- 5
+m <- -0.545
+mo <- -0.539
+s <- 0.008
+t = (mo-m) / (s/sqrt(n)) #t = (mo-m) / s *sqrt(n)
+p <- pt(-abs(t), n-1)
+p
+
+
+#
+t = t.test(laptops, conf.level=0.95, mu=50)
+t$p.value
+#Merk op dat je in bovenstaande code de waarde van alternative op greater zet als de hypothese
+#zegt dat de waarde kleiner is. Dat is misschien een beetje verwarrend.
+t=t.test(laptops, conf.level=0.95, mu=32, alternative="greater")
+t$p.value
+as.vector(t$conf.int)
+t=t.test(laptops, conf.level=0.95, mu=32, alternative="less")
+t$p.value
+as.vector(t$conf.int)
+t=t.test(laptops, conf.level=0.95, mu=47, alternative="less")
+t$p.value
+
+
+# les 3: genetische Algoritmen
+
+library("GA")
+library("GenSA")
+
+
+data <- read.csv(file="Knapsack Items.csv", sep=";")
+
+
+#knapsack problem with SA
+
+# Define data 
+p <- data$gewichten.gr. # Profits 
+w <- data$waarde # Weights 
+W <- 750 # Knapsack ’s capacity 
+n <- length(p) # Number of items
+
+# Define fitness function 
+knapsack <- function(x) { 
+  f <- sum(x * p) 
+  penalty <- sum(w) * abs(sum(x * w) - W) 
+  f - penalty 
+}
+
+# Run SGA
+SGA <- ga(type="binary", 
+          fitness=knapsack , 
+          nBits=n, 
+          maxiter=100, # Maximum number of generations 
+          run=2000,     # Stop if the best-so-far fitness
+          # hasn't improved for 'run' generations 
+          popSize=100, 
+          seed=202554)
+
+x.star <- SGA@solution # Final solution: c(1, 0, 0, 1, 0, 0, 0)
+sum(x.star)     # Total number of selected items: 2
+sum(x.star * p) # Total profit of selected items: 15
+sum(x.star * w) # Total weight of selected items: 9
+
+
+#knapsack problem with GENSA
+
+p <- data$gewichten.gr. # Profits 
+w <- data$waarde # Weights 
+W <- 750 # Knapsack ’s capacity 
+n <- length(p) # Number of items
+
+
+x = sample(c(0,1),size = n, replace = T) #set a first at random to be optimized 
+
+knapsack <- function(x) { 
+  f <- sum(x * p) 
+  penalty <- sum(w) * abs(sum(x * w) - W) 
+  f - penalty 
+}
+
+# Run GenSA
+SA = GenSA(par = x, fn = knapsack, lower = rep(0,n), upper = rep(1,n))
+x.star = round(SA$par)
+
+print(x.star)
+print(sum(x.star)) # Total number of selected items
+print(sum(x.star * p)) # Total profit of selected items
+print(sum(x.star * w)) # Total weight of selected items
+
+###the traveling salesman problem
+
+# Define data 
+p <- data$gewichten.gr. # Profits 
+w <- data$waarde # Weights 
+W <- 750 # Knapsack ’s capacity 
+n <- length(p) # Number of items
+
+# Define fitness function 
+knapsack <- function(x) { 
+  f <- sum(x * p) 
+  penalty <- sum(w) * abs(sum(x * w) - W) 
+  f - penalty 
+}
+
+# Run SGA
+SGA <- ga(type="binary", 
+          fitness=knapsack , 
+          nBits=n, 
+          maxiter=100, # Maximum number of generations 
+          run=2000,     # Stop if the best-so-far fitness
+          # hasn't improved for 'run' generations 
+          popSize=100, 
+          seed=202554)
+
+x.star <- SGA@solution # Final solution: c(1, 0, 0, 1, 0, 0, 0)
+sum(x.star)     # Total number of selected items: 2
+sum(x.star * p) # Total profit of selected items: 15
+sum(x.star * w)
+
+b= runif(1,0,400)
+objective.function = function(b) {
+  l=(400-b* pi)/2
+  return(-l*b)
+}
+ 
+sa = GenSA(par=b, 
+  fn = objective.function,
+  lower = 0,
+  upper = 400) 
+
+sa$par
+
+
+
+
+#les 4: discriminant analyse
+library("MASS")
+
+#aantal dimensies = 
+ # - aantal categorieën afhank - 1
+ # - aantal indep 
+ # = minimum van deze twee
+
+lda(groep ~ x1 +x2 + X3, data = data)
+data("biopsy")
+lda(class ~ V1 + V2 + V3, data=biopsy)
+summary(glm(class ~ V1 + V2 + V4 ,family=binomial(link='logit'),data=biopsy))
+
+
+#oef 1
+library("DiscriMiner")
+data("bordeaux")
+
+m1 <- lda(quality ~ temperature + sun + heat + rain, data = bordeaux)
+plot(m1)
+predict(m1)$Class
+
+vergelijk <- table(bordeaux$quality, predict(m1)$class)
+#2 dimensisies 
+# de individuele waarden, op 2 dimensies, gebruik makend van de functies
+
+#oef 2
+data("birthwt")
+
+str(birthwt)
+
+#low, race, smoke, hypertension, uterine (tho depending on how you look at ftw: max 6)
+# all other variables
+
+m1 <- lda(low ~ age + lwt + ptl + ftv, data = birthwt)
+#1
+plot(m1)
+
+
+#oef3
+data("Cars93")
+
+str(Cars93)
+data1 <- Cars93[1:90,]
+data2 <- Cars93[91:93,]
+
+#everything factor except model & make
+#the rest, except for min,max price
+ m1 <- lda(Type ~ Price + MPG.city + MPG.highway  + EngineSize + Horsepower + 
+             RPM + Rev.per.mile + Fuel.tank.capacity + Passengers + Length +Wheelbase + Width + Turn.circle + 
+             Rear.seat.room + Luggage.room + Weight, data = Cars93)
+ # 4 (want van is empty)
+ 
+ predict(m1,data2)
+ # 91 = 1, 92 = 1, 93=3 (Enkel 1 klopt niet
+ 
+ # les 4 PCA
+ 
+ data <- read.csv(file="Protein.csv")
+ 
+ data1 <- data[, -(c(1,2,3,13)) ]
+ rownames(data1) <- data[,1]
+ 
+ 
+ cor(data1)
+ #ja goede corr
+ 
+ result = prcomp(data1, scale.= TRUE, center = TRUE) #rank. = kan je ook ingeven hoeveel compo weer te geven
+ summary(result)
+ 
+ corr(data1)
+ mean(abs(cor(data1)))
+ 
+ # 5 PCA
+ result$rotation #nuts weegt door
+ biplot(result)
+ install.packages("devtools")
+ library("devtools")
+ install_github("vqv/ggbiplot") #werkt niet
+ 
+ library("ggbiplot")
+ 
+ PCApredictoren = data.frame(predict(result)[,1:3])
+ 
+ clusters <- hclust(dist(PCApredictoren))
+ plot(clusters)
+ 
+ #oef2
+goblet <- read.csv(file="goblets.csv", sep=";")
+goblet1 <- goblet[, -1 ]
+rownames(goblet1) <- goblet[,1]
+result = prcomp(goblet1, scale.= TRUE, center = TRUE)
+summary(result)
+plot(result)
+biplot(result)
+
+data <- goblet1
+
+data$V1 = goblet$X2/goblet$X1
+data$V2 = goblet$X2/goblet$X4
+data$V3 = goblet$X1/goblet$X4
+data$V4 = goblet$X2/goblet$X5
+data$V5 = goblet$X1/goblet$X5
+data$V6 = goblet$X4/goblet$X5
+data$V7 = goblet$X3/goblet$X6
+
+verhoudingen <- data[, -c(1:6)]
+
+result = prcomp(verhoudingen, scale.= TRUE, center = TRUE)
+summary(result)
+cor(verhoudingen)
+
+#oef3
+data("cpus")
+data1 <- cpus[, -(c(1)) ] #wat met min & max?
+rownames(data1) <- cpus[,1]
+cor(data1)#syct mss niet?
+
+result = prcomp(data1, scale.= TRUE, center = TRUE)
+summary(result) #nee enkel 1 weegt door? of is minus ook doorwegen?
+
+plot(result)
+biplot(result)#3 pijlen naar dezelfde richting, dus 3? de results zeggen 4
+
+
+#les 5
+
+library("keras")
+install_keras()
+
+mnist <- dataset_mnist()
+x_train <- mnist$train$x
+y_train <- mnist$train$y
+x_test <- mnist$test$x
+y_test <- mnist$test$y
+
+dim(x_train)
+dim(y_train)
+
+# visualize first 4 digits
+par(mfcol=c(1,4))            	# plaats 4 afbeelding naast elkaar
+for(i in 1:4){
+  im = x_train[i,,]           # selecteer het i-de 2D image
+  im = t(apply(im, 2, rev))   # keer de kolommen om (ze staan op hun kop)
+  image(im)		        	# plot
+}
+
+head(y_train)
+
+# reshape
+x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+# rescale
+x_train <- x_train / 255
+x_test <- x_test / 255
+
+dim(x_test)
+dim(x_train)
+
+y_train <- to_categorical(y_train, 10)
+y_test <- to_categorical(y_test, 10)
+
+
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
+  layer_dropout(rate = 0.4) %>% 
+  layer_dense(units = 128, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 10, activation = 'softmax')
+
+summary(model)
+
+
+model %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_rmsprop(),
+  metrics = c('accuracy')
+)
+
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 30, batch_size = 128, 
+  validation_split = 0.2
+)
+
+plot(history)
+
+model %>% evaluate(x_test, y_test)
+
+model %>% predict_classes(x_test)

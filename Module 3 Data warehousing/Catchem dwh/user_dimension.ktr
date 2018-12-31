@@ -440,17 +440,17 @@
     <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME}</database>
+    <database>catchem</database>
     <port>1433</port>
-    <username>${DB_USERNAME}</username>
-    <password>${DB_PASSWORD}</password>
+    <username>sa</username>
+    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>${INSTANCE_NAME}</attribute>
+        <attribute>SQLSERVER2017</attribute>
       </attribute>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.stringtype</code>
@@ -504,20 +504,20 @@
   </connection>
   <connection>
     <name>Dwh Catchem</name>
-    <server>localhost</server>
+    <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME_DWH}</database>
+    <database>Dwh Catchem</database>
     <port>1433</port>
-    <username>${USERNAME}</username>
-    <password>${DB_PASSWORD}</password>
+    <username>DB4</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce10beb68d8e</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>${INSTANCE_NAME}</attribute>
+        <attribute>SQLSERVER2017</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -583,11 +583,6 @@
     </hop>
     <hop>
       <from>Formula</from>
-      <to>Database lookup</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Database lookup</from>
       <to>Dimension lookup/update</to>
       <enabled>Y</enabled>
     </hop>
@@ -699,12 +694,12 @@ order by 1 asc;</sql>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>112</yloc>
+      <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Table input</name>
+    <name>Table input 2</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -715,11 +710,11 @@ order by 1 asc;</sql>
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, count(*) logs_found
-FROM dbo.user_table u
-JOIN dbo.treasure_log t ON u.id = t.hunter_id
-GROUP by u.id, first_name, last_name, street, number, city_city_id
-order by 1 asc;</sql>
+    <sql>select CONVERT(varchar(255), owner_id, 2) owner_id, count(*) 'number_treasures'
+FROM dbo.treasure
+group by owner_id
+order by 1 asc;
+</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -734,7 +729,7 @@ order by 1 asc;</sql>
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>304</yloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -882,55 +877,8 @@ order by 1 asc;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
+      <xloc>544</xloc>
       <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Database lookup</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>catchem</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>treasure_log</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>Y</eat_row_on_failure>
-      <key>
-        <name>u_id</name>
-        <field>hunter_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>log_time</name>
-        <rename>log_time</rename>
-        <default/>
-        <type>Date</type>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

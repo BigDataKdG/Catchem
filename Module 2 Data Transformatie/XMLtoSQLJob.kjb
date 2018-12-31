@@ -355,7 +355,7 @@
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${localFileStructure}Module 2 Data Transformatie\xsl_transformation.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/xsl_transformation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -382,8 +382,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>256</xloc>
-      <yloc>176</yloc>
+      <xloc>304</xloc>
+      <yloc>80</yloc>
     </entry>
     <entry>
       <name>SQL</name>
@@ -398,8 +398,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>400</xloc>
-      <yloc>304</yloc>
+      <xloc>512</xloc>
+      <yloc>80</yloc>
     </entry>
     <entry>
       <name>START</name>
