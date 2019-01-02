@@ -8,7 +8,8 @@
 ###########################################################
 
 
-#les 1: kansverdelingen & kansen
+#Les 1: kansverdelingen & kansen
+{
 
 ##binom verdeling
 #vragen over repetitieve experimenten
@@ -50,10 +51,10 @@ pnorm(x, mean=, sd=) #cummulatieve
 1- pnorm(x, mean=, sd=) # > exacte waarde
 pnorm(x, mean=, sd=)# < exacte waarde
 pnorm(x, mean=0, sd=1)-pnorm(x, mean=0,sd=1)#tussen 2 waarden
+}
 
-
-#les 2 toetsen
-
+#Les 2 toetsen
+{
 data <- read.csv(file="haarkleurbrussel.csv")
 
 #CHI² testing
@@ -172,10 +173,10 @@ t$p.value
 as.vector(t$conf.int)
 t=t.test(laptops, conf.level=0.95, mu=47, alternative="less")
 t$p.value
+}
 
-
-# les 3: genetische Algoritmen
-
+#Les 3: genetische Algoritmen
+{
 library("GA")
 library("GenSA")
 
@@ -282,10 +283,10 @@ sa = GenSA(par=b,
 
 sa$par
 
+}
 
-
-
-#les 4: discriminant analyse
+#Les 4: discriminant analyse
+{
 library("MASS")
 
 #aantal dimensies = 
@@ -408,10 +409,10 @@ summary(result) #nee enkel 1 weegt door? of is minus ook doorwegen?
 
 plot(result)
 biplot(result)#3 pijlen naar dezelfde richting, dus 3? de results zeggen 4
+}
 
-
-#les 5
-
+#Les 5: Neural networks
+{
 library("keras")
 install_keras()
 
@@ -421,7 +422,7 @@ y_train <- mnist$train$y
 x_test <- mnist$test$x
 y_test <- mnist$test$y
 
-dim(x_train)
+dim(x_train) #60000 matrices van 28 op 28
 dim(y_train)
 
 # visualize first 4 digits
@@ -448,6 +449,7 @@ y_train <- to_categorical(y_train, 10)
 y_test <- to_categorical(y_test, 10)
 
 
+#4 layers, (1) input = 784 (28*28), (2) hidden 256, (3) 128, (4) 10
 model <- keras_model_sequential() 
 model %>% 
   layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
@@ -460,19 +462,206 @@ summary(model)
 
 
 model %>% compile(
-  loss = 'categorical_crossentropy',
+  loss = 'categorical_crossentropy', #kost functie
   optimizer = optimizer_rmsprop(),
   metrics = c('accuracy')
 )
 
+# 30 alles erdoor, per 128 de errors udaten, validation split = apart houden en niet aanbieden (om te testen voor overfit)
 history <- model %>% fit(
   x_train, y_train, 
   epochs = 30, batch_size = 128, 
   validation_split = 0.2
 )
 
+
+#BOVENAAN=>blauw= de training set, groen = de validatie set. Na 30 epochs zien we een discrepantie tussen de twee curves wat op over-fitting wijst
+#ONDERNAAN=>de accuracy (hier zie je ook de divergentie)
 plot(history)
 
 model %>% evaluate(x_test, y_test)
 
 model %>% predict_classes(x_test)
+}
+
+
+#simpsons
+data <- read.csv(file="simpsons_orig.csv", sep=";")
+
+#matrix maken van de dataframe met trainingsdata (enkel met de bruikbare data)
+x_train <-as.matrix(data[,3:5])
+
+#de target vector mag geen nominale data bevatten, dus omzetten
+y_train <- as.matrix(ifelse(data$Geslacht == "M", 0, 1))
+
+#normaliseer data met range 1-0
+x_train<- normalize(x_train)
+
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(units = 64, activation = 'relu', input_shape = c(3)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
+  layer_dense(units = 32, activation = 'relu') %>%
+  layer_dense(units= 16, activation = 'relu') %>%
+  layer_dense(units = 1, activation = 'sigmoid') #sigmoid voor 0/1 te bekomen
+
+summary(model)
+
+
+###verschillende activatie functies
+#lineaire
+# sigmoid
+
+#Sigmoid functions and their combinations usually work better for classification 
+##techniques ex. Binary Classification 0s and 1s.
+
+# relu
+
+## most popular, but can only be used in the hidden layers
+
+
+# softmax
+
+#normalises output: the question than is, why have we normalised the data in the first place? And what is the difference between sigmoid and softmax?
+
+#sigmoid is used for two-class logistic regression, whilst softmax is used for multiclass (multinominal) logistic regression
+
+
+# leaky rely
+# tanh 
+# elu 
+
+
+model %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_nadam(),
+  metrics = c('accuracy')
+)
+
+###verschillende soorten loss
+# binary_crossentropy
+# categorical_crossentropy
+
+###verschillende soorten optizer
+#optimizer_rmsprop
+#optimizer_nadam
+
+history <- model %>% fit(
+  x_train, y_train, 
+  epochs = 100, batch_size = 3 
+  #,validation_split = 0.2 #staat uit wegens kleine grote
+)
+
+model %>% predict(x_train)
+
+model %>% predict_classes(x_train) #maakt er classes van
+
+
+##forecasting
+
+data <- read.csv(file="forcastdemo.csv", sep=",")
+
+x_train <- as.matrix(data[,2])
+y_train <- as.matrix(data[,3])
+
+#scale() uses Z-score standardisation
+x_train <- scale(x_train)
+y_train <- scale(y_train)
+
+
+model <- keras_model_sequential() 
+model %>% 
+  layer_dense(units = 64, activation = 'linear', input_shape = c(1)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
+  layer_dense(units = 32, activation = 'linear') %>%
+  layer_dense(units= 16, activation = 'linear') %>%
+  layer_dense(units = 1, activation = 'linear') 
+
+summary(model)
+}
+
+
+
+
+
+
+#Les 6: Evaluatie Metrieken
+{
+  #cheat
+   # Sensitivity = RECALL = TPR
+   # Specifciity = 1-FPR 
+  
+  
+ #in carret package?
+   #confusion matrix
+  
+  values <- c(2385,4,0,1,4,0,332,0,0,1,0,1,908,8,0,0,0,0,1084,9,12,0,0,6,2053)
+  confusion.matrix <- matrix(values, byrow=T, ncol=5)
+  colnames(confusion.matrix) <- c("Asfalt", "Beton", "Gras", "Boom", "Gebouw")
+  rownames(confusion.matrix) <- colnames(confusion.matrix)
+  confusion.matrix
+  
+  rowSums(confusion.matrix)
+  colSums(confusion.matrix)
+  diag(confusion.matrix)
+  
+  #precisions for all classes
+  diag(confusion.matrix)/rowSums(confusion.matrix)
+  
+  #recalls 
+  diag(confusion.matrix)/colSums(confusion.matrix)
+  
+  #accuract
+  sum(diag(confusion.matrix))/sum(confusion.matrix)
+  
+  accuracy <- function(cm)
+  {
+    sum(diag(cm)/sum(cm))
+  }
+  
+  accuracy(confusion.matrix)
+
+  precision <- function(cm)
+  {
+    ps <- diag(cm)/rowSums(cm)
+    return(ps)
+   }
+  
+  precision(confusion.matrix)
+  
+  precision <- function(cm,g = FALSE)
+  {
+    ps <- diag(cm)/rowSums(cm)
+    if(g){
+      return(weighted.mean(ps, rowSums(cm)))
+    }
+    
+  }
+  
+  precision(confusion.matrix, g= TRUE )
+  
+  #de rest ook in functies zetten!
+  
+  #Fmeasure
+  
+  
+  #ROC-curce 
+  
+  install.packages("pROC")
+  library("pROC")
+  
+  library("MASS")
+   data("biopsy")
+   model = lda(class~V1 + V2 + V3, data=biopsy)
+   responses <- as.numeric(biopsy$class)-1 #-1 want 0&1 nodig
+   predictors <- as.vector(predict(model)$x)
+   
+   ROC <- roc(responses, predictors, positive =0)
+   plot.roc(ROC, auc.polygon=T, col="blue", identity.col="red", identity.lty=2, print.auc=T, print.thres=T)
+  # -0.445 = t
+  # 0.922 = TPR
+  # 1-0.926 = FPR
+   
+   
+  
+  
+  
+}

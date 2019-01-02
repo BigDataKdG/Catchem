@@ -442,6 +442,11 @@
       <to>XSL Transformation</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>XSL Transformation</from>
+      <to>Text file output</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Load file content in memory</name>
@@ -463,8 +468,8 @@
     <rownum_field/>
     <encoding>UTF-8</encoding>
     <file>
-      <name>C:\Users\Fheylen\OneDrive\Data Science\KDG\bigdata\CountryCityList.xml</name>
-      <filemask/>
+      <name>C:\Users\Fheylen\OneDrive\Data Science\KDG\bigdata\Split final</name>
+      <filemask>.*\.xml</filemask>
       <exclude_filemask/>
       <file_required>N</file_required>
       <include_subfolders>N</include_subfolders>
@@ -515,7 +520,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>160</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -534,7 +539,6 @@
     <fields>
       <field>
         <name>result</name>
-        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -576,7 +580,7 @@
     <fileNameField/>
     <create_parent_folder>N</create_parent_folder>
     <file>
-      <name>C:\Users\Fheylen\Catchem\Module 2 Data Transformatie\cities</name>
+      <name>C:\Users\Fheylen\OneDrive\Data Science\KDG\bigdata\final</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>sql</extention>
@@ -614,42 +618,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>592</xloc>
-      <yloc>144</yloc>
-      <draw>N</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>XSL Transformation</name>
-    <type>XSLT</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <xslfilename>C:\Users\Fheylen\Catchem\Module 2 Data Transformatie\XmlToSql.xsl</xslfilename>
-    <fieldname>File content</fieldname>
-    <resultfieldname>result</resultfieldname>
-    <xslfilefield/>
-    <xslfilefielduse>N</xslfilefielduse>
-    <xslfieldisafile>N</xslfieldisafile>
-    <xslfactory>SAXON</xslfactory>
-    <parameters>
-    </parameters>
-    <outputproperties>
-    </outputproperties>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>432</xloc>
+      <xloc>560</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -709,8 +678,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>288</yloc>
+      <xloc>320</xloc>
+      <yloc>336</yloc>
       <draw>N</draw>
     </GUI>
   </step>
@@ -754,9 +723,44 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>80</xloc>
-      <yloc>384</yloc>
+      <xloc>464</xloc>
+      <yloc>224</yloc>
       <draw>N</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>XSL Transformation</name>
+    <type>XSLT</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <xslfilename>C:\Users\Fheylen\Catchem\Module 2 Data Transformatie\XmlToSql.xsl</xslfilename>
+    <fieldname>File content</fieldname>
+    <resultfieldname>result</resultfieldname>
+    <xslfilefield/>
+    <xslfilefielduse>N</xslfilefielduse>
+    <xslfieldisafile>N</xslfieldisafile>
+    <xslfactory>SAXON</xslfactory>
+    <parameters>
+    </parameters>
+    <outputproperties>
+    </outputproperties>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>368</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
