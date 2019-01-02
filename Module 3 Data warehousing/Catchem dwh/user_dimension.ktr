@@ -440,17 +440,17 @@
     <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME}</database>
+    <database>catchem</database>
     <port>1433</port>
-    <username>${DB_USERNAME}</username>
-    <password>${DB_PASSWORD}</password>
+    <username>sa</username>
+    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>${INSTANCE_NAME}</attribute>
+        <attribute>SQLSERVER2017</attribute>
       </attribute>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.stringtype</code>
@@ -504,20 +504,20 @@
   </connection>
   <connection>
     <name>Dwh Catchem</name>
-    <server>localhost</server>
+    <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME_DWH}</database>
+    <database>Dwh Catchem</database>
     <port>1433</port>
-    <username>${USERNAME}</username>
-    <password>${DB_PASSWORD}</password>
+    <username>DB4</username>
+    <password>Encrypted 2be98afc86aa7f2e4cb79ce10beb68d8e</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
     <attributes>
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>${INSTANCE_NAME}</attribute>
+        <attribute>SQLSERVER2017</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -583,15 +583,116 @@
     </hop>
     <hop>
       <from>Formula</from>
-      <to>Select values</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Select values</from>
-      <to>Table output</to>
+      <to>Dimension lookup/update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Dimension lookup/update</name>
+    <type>DimensionLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
+    <table>user_dim</table>
+    <connection>Dwh Catchem</connection>
+    <commit>100</commit>
+    <update>Y</update>
+    <fields>
+      <key>
+        <name>u_id</name>
+        <lookup>u_id</lookup>
+      </key>
+      <date>
+        <name>log_time</name>
+        <from>date_from</from>
+        <to>date_to</to>
+      </date>
+      <field>
+        <name>first_name</name>
+        <lookup>first_name</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>last_name</name>
+        <lookup>last_name</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>street</name>
+        <lookup>street</lookup>
+        <update>Insert</update>
+      </field>
+      <field>
+        <name>number</name>
+        <lookup>number</lookup>
+        <update>Insert</update>
+      </field>
+      <field>
+        <name>city_city_id</name>
+        <lookup>city_city_id</lookup>
+        <update>Insert</update>
+      </field>
+      <field>
+        <name>logs_found</name>
+        <lookup>logs_found</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>owner_id</name>
+        <lookup>owner_id</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>number_treasures</name>
+        <lookup>number_treasures</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>experience_level</name>
+        <lookup>experience_level</lookup>
+        <update>Insert</update>
+      </field>
+      <field>
+        <name>dedicator</name>
+        <lookup>dedicator</lookup>
+        <update>Insert</update>
+      </field>
+      <return>
+        <name>Surrogate</name>
+        <rename/>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+        <version>version</version>
+      </return>
+    </fields>
+    <sequence/>
+    <min_year>1990</min_year>
+    <max_year>2199</max_year>
+    <cache_size>5000</cache_size>
+    <preload_cache>N</preload_cache>
+    <use_start_date_alternative>N</use_start_date_alternative>
+    <start_date_alternative>none</start_date_alternative>
+    <start_date_field_name>log_time</start_date_field_name>
+    <useBatch>N</useBatch>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>192</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Formula</name>
     <type>Formula</type>
@@ -630,7 +731,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
+      <xloc>368</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -663,69 +764,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
+      <xloc>240</xloc>
       <yloc>192</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Select values</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>u_id</name>
-        <rename>u_id</rename>
-        <type>Binary</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-      <meta>
-        <name>owner_id</name>
-        <rename>owner_id</rename>
-        <type>Binary</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask/>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-    </fields>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>608</xloc>
-      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -759,7 +799,7 @@ order by 1 asc;</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
+      <xloc>96</xloc>
       <yloc>128</yloc>
       <draw>Y</draw>
     </GUI>
@@ -794,8 +834,8 @@ order by 1 asc;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>288</yloc>
+      <xloc>96</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -812,7 +852,7 @@ order by 1 asc;
     </partitioning>
     <connection>Dwh Catchem</connection>
     <schema/>
-    <table>User_table</table>
+    <table>User_table22</table>
     <commit>1000</commit>
     <truncate>Y</truncate>
     <ignore_errors>N</ignore_errors>
@@ -837,9 +877,9 @@ order by 1 asc;
       </output>
     </remotesteps>
     <GUI>
-      <xloc>752</xloc>
-      <yloc>192</yloc>
-      <draw>Y</draw>
+      <xloc>416</xloc>
+      <yloc>320</yloc>
+      <draw>N</draw>
     </GUI>
   </step>
   <step_error_handling>
