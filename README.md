@@ -8,3 +8,4 @@ In Spoon, go to Edit - Edit the kettle.properties file and add following variabl
 - ${DB_USERNAME} (Username to connect to SQL Server)
 - ${DB_PASSWORD} (Password to connect to SQL Server)
 - ${LOCAL_FILE_STRUCTURE} (Directory where Catchem is located)
+- ${SQL_FILE_LOCATION} (Directory where the generated sql file is located)
