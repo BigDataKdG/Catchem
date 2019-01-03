@@ -580,7 +580,7 @@
     <fileNameField/>
     <create_parent_folder>N</create_parent_folder>
     <file>
-      <name>C:\Users\Fheylen\OneDrive\Data Science\KDG\bigdata\final</name>
+      <name>${SQL_FILE_LOCATION}countriesAndCities</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>sql</extention>
@@ -618,7 +618,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
+      <xloc>560</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -739,7 +739,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <xslfilename>C:\Users\Fheylen\Catchem\Module 2 Data Transformatie\XmlToSql.xsl</xslfilename>
+    <xslfilename>${LOCAL_FILE_STRUCTURE}Module 2 Data Transformatie\XmlToSql.xsl</xslfilename>
     <fieldname>File content</fieldname>
     <resultfieldname>result</resultfieldname>
     <xslfilefield/>
