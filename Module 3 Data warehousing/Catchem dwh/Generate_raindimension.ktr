@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Generate_weatherhistory</name>
+    <name>Generate_raindimension</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -9,11 +9,6 @@
     <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
-      <parameter>
-        <name>DATA_PATH_1</name>
-        <default_value>file:///C:/Users/T.Goris/Documents/School/Jaar 3/Databanken/ExamenProject</default_value>
-        <description>Data file path discovered during export</description>
-      </parameter>
     </parameters>
     <log>
       <trans-log-table>
@@ -433,77 +428,14 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2014/10/26 12:12:45.000</created_date>
+    <created_date>2014/10/26 11:35:55.000</created_date>
     <modified_user>admin</modified_user>
-    <modified_date>2014/11/02 15:42:35.000</modified_date>
+    <modified_date>2014/10/26 15:40:52.000</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
-  <connection>
-    <name>catchem</name>
-    <server>localhost</server>
-    <type>MSSQLNATIVE</type>
-    <access>Native</access>
-    <database>${DB_NAME}</database>
-    <port>1433</port>
-    <username>${DB_USERNAME}</username>
-    <password>${DB_PASSWORD}</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>${INSTANCE_NAME}</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>MSSQLUseIntegratedSecurity</code>
-        <attribute>false</attribute>
-      </attribute>
-      <attribute>
-        <code>MSSQL_DOUBLE_DECIMAL_SEPARATOR</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>1433</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <connection>
     <name>catchem_dwh</name>
     <server>localhost</server>
@@ -547,7 +479,7 @@
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
@@ -559,7 +491,7 @@
       </attribute>
       <attribute>
         <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>N</attribute>
+        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>USE_POOLING</code>
@@ -569,39 +501,14 @@
   </connection>
   <order>
     <hop>
-      <from>Get_CurrentWeather</from>
-      <to>extract_weather</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>get_cities_from_table</from>
-      <to>Generate_Url</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Generate_Url</from>
-      <to>Get_CurrentWeather</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Lookup_Rain</from>
-      <to>HIST_WEATHER</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>extract_weather</from>
-      <to>Modified Java Script Value</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Modified Java Script Value</from>
-      <to>Lookup_Rain</to>
+      <from>Get_WeatherCSV</from>
+      <to>dim_rain</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>extract_weather</name>
-    <type>JsonInput</type>
+    <name>Get_WeatherCSV</name>
+    <type>CsvInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -610,106 +517,41 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <include>N</include>
-    <include_field/>
-    <rownum>N</rownum>
-    <addresultfile>N</addresultfile>
-    <readurl>N</readurl>
-    <removeSourceField>N</removeSourceField>
-    <IsIgnoreEmptyFile>N</IsIgnoreEmptyFile>
-    <doNotFailIfNoFile>Y</doNotFailIfNoFile>
-    <ignoreMissingPath>N</ignoreMissingPath>
-    <defaultPathLeafToNull>Y</defaultPathLeafToNull>
+    <filename>${LOCAL_FILE_STRUCTURE}Module 3 Data warehousing\Catchem dwh\rain.csv</filename>
+    <filename_field/>
     <rownum_field/>
-    <file>
-      <name/>
-      <filemask/>
-      <exclude_filemask/>
-      <file_required>N</file_required>
-      <include_subfolders>N</include_subfolders>
-    </file>
+    <include_filename>N</include_filename>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <header>Y</header>
+    <buffer_size>50000</buffer_size>
+    <lazy_conversion>Y</lazy_conversion>
+    <add_filename_result>N</add_filename_result>
+    <parallel>N</parallel>
+    <newline_possible>N</newline_possible>
+    <encoding/>
     <fields>
       <field>
-        <name>weather_id</name>
-        <path>$.['weather'][0]['id']</path>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
+        <name>id</name>
+        <type>Integer</type>
+        <format>#</format>
+        <currency>€</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>15</length>
+        <precision>0</precision>
         <trim_type>none</trim_type>
-        <repeat>N</repeat>
       </field>
       <field>
-        <name>epoch</name>
-        <path>$.dt</path>
+        <name>rainType</name>
         <type>String</type>
         <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
+        <currency>€</currency>
+        <decimal>,</decimal>
+        <group>.</group>
+        <length>31</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
-        <repeat>N</repeat>
-      </field>
-    </fields>
-    <limit>0</limit>
-    <IsInFields>Y</IsInFields>
-    <IsAFile>N</IsAFile>
-    <valueField>result</valueField>
-    <shortFileFieldName/>
-    <pathFieldName/>
-    <hiddenFieldName/>
-    <lastModificationTimeFieldName/>
-    <uriNameFieldName/>
-    <rootUriNameFieldName/>
-    <extensionFieldName/>
-    <sizeFieldName/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>672</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Generate_Url</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>var url = "http://api.openweathermap.org/data/2.5/weather?lat=" + latitude + "&amp;lon=" + longitude + "&amp;appid=baf187e8fa60017445e46f50478787e5";
-</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>url</name>
-        <rename>url</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
       </field>
     </fields>
     <cluster_schema/>
@@ -720,66 +562,15 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>323</xloc>
-      <yloc>145</yloc>
+      <xloc>192</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Get_CurrentWeather</name>
-    <type>HTTP</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <url/>
-    <urlInField>Y</urlInField>
-    <urlField>url</urlField>
-    <encoding>UTF-8</encoding>
-    <httpLogin/>
-    <httpPassword>Encrypted </httpPassword>
-    <proxyHost/>
-    <proxyPort/>
-    <socketTimeout>10000</socketTimeout>
-    <connectionTimeout>10000</connectionTimeout>
-    <closeIdleConnectionsTime>-1</closeIdleConnectionsTime>
-    <lookup>
-      <arg>
-        <name>latitude</name>
-        <parameter>latitude</parameter>
-      </arg>
-      <arg>
-        <name>longitude</name>
-        <parameter>longitude</parameter>
-      </arg>
-    </lookup>
-    <result>
-      <name>result</name>
-      <code/>
-      <response_time/>
-      <response_header/>
-    </result>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>519</xloc>
-      <yloc>150</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>HIST_WEATHER</name>
+    <name>dim_rain</name>
     <type>InsertUpdate</type>
-    <description>HIST_WEATHER</description>
+    <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
@@ -792,79 +583,28 @@
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>weather_hist</table>
-      <key>
-        <name>city_id</name>
-        <field>city_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>city_id</name>
-        <rename>city_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>name</name>
-        <rename>city_name</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>description</name>
-        <rename>description</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>timestamp</name>
-        <rename>timestamp</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1088</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Lookup_Rain</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>catchem_dwh</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema>dbo</schema>
       <table>dim_rain</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
       <key>
-        <name>updatedWeather_id</name>
+        <name>id</name>
         <field>id</field>
         <condition>=</condition>
         <name2/>
       </key>
+      <key>
+        <name>rainType</name>
+        <field>rainType</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>id</name>
+        <rename>id</rename>
+        <update>Y</update>
+      </value>
       <value>
         <name>rainType</name>
-        <rename>description</rename>
-        <default>0</default>
-        <type>String</type>
+        <rename>rainType</rename>
+        <update>Y</update>
       </value>
     </lookup>
     <cluster_schema/>
@@ -875,122 +615,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>960</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>get_cities_from_table</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>catchem</connection>
-    <sql>SELECT TOP 10 CONVERT(varchar(255),city_id, 2) as city_id, city_name, latitude, longitude
-FROM dbo.city
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>128</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Modified Java Script Value</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>
-      <jsScript>
-        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>
-var timestamp = new Date(epoch * 1000); // * 1000 sets it to miliseconds, which is a valid param for Date 
-var firstDigit = weather_id.toString()[0];
-var updatedWeather_id = weather_id;
-if (!(firstDigit === "3" || firstDigit == "5")) { 
-	updatedWeather_id = "999";
-}</jsScript_script>
-      </jsScript>
-    </jsScripts>
-    <fields>
-      <field>
-        <name>timestamp</name>
-        <rename>timestamp</rename>
-        <type>Date</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>city_id</name>
-        <rename>city_id</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>timestamp</name>
-        <rename>timestamp</rename>
-        <type>Date</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>firstDigit</name>
-        <rename>firstDigit</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-      <field>
-        <name>updatedWeather_id</name>
-        <rename>updatedWeather_id</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>
-    </fields>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>816</xloc>
-      <yloc>144</yloc>
+      <xloc>400</xloc>
+      <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
