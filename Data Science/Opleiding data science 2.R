@@ -7,6 +7,8 @@
 #\__,_|\__,_|\__\__,_| |___/\___|_|\___|_| |_|\___\___|   #
 ###########################################################
 
+library(MASS)
+library(car)
 
 #Les 1: kansverdelingen & kansen
 {
@@ -416,167 +418,245 @@ biplot(result)#3 pijlen naar dezelfde richting, dus 3? de results zeggen 4
 library("keras")
 install_keras()
 
-mnist <- dataset_mnist()
-x_train <- mnist$train$x
-y_train <- mnist$train$y
-x_test <- mnist$test$x
-y_test <- mnist$test$y
-
-dim(x_train) #60000 matrices van 28 op 28
-dim(y_train)
-
-# visualize first 4 digits
-par(mfcol=c(1,4))            	# plaats 4 afbeelding naast elkaar
-for(i in 1:4){
-  im = x_train[i,,]           # selecteer het i-de 2D image
-  im = t(apply(im, 2, rev))   # keer de kolommen om (ze staan op hun kop)
-  image(im)		        	# plot
+  #MNIST example
+  {
+  mnist <- dataset_mnist()
+  x_train <- mnist$train$x
+  y_train <- mnist$train$y
+  x_test <- mnist$test$x
+  y_test <- mnist$test$y
+  
+  dim(x_train) #60000 matrices van 28 op 28
+  dim(y_train)
+  
+  # visualize first 4 digits
+  par(mfcol=c(1,4))            	# plaats 4 afbeelding naast elkaar
+  for(i in 1:4){
+    im = x_train[i,,]           # selecteer het i-de 2D image
+    im = t(apply(im, 2, rev))   # keer de kolommen om (ze staan op hun kop)
+    image(im)		        	# plot
+  }
+  
+  head(y_train)
+  
+  # reshape
+  x_train <- array_reshape(x_train, c(nrow(x_train), 784))
+  x_test <- array_reshape(x_test, c(nrow(x_test), 784))
+  # rescale
+  x_train <- x_train / 255
+  x_test <- x_test / 255
+  
+  dim(x_test)
+  dim(x_train)
+  
+  y_train <- to_categorical(y_train, 10)
+  y_test <- to_categorical(y_test, 10)
+  
+  
+  #4 layers, (1) input = 784 (28*28), (2) hidden 256, (3) 128, (4) 10
+  model <- keras_model_sequential() 
+  model %>% 
+    layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
+    layer_dropout(rate = 0.4) %>% 
+    layer_dense(units = 128, activation = 'relu') %>%
+    layer_dropout(rate = 0.3) %>%
+    layer_dense(units = 10, activation = 'softmax')
+  
+  summary(model)
+  
+  
+  model %>% compile(
+    loss = 'categorical_crossentropy', #kost functie
+    optimizer = optimizer_rmsprop(),
+    metrics = c('accuracy')
+  )
+  
+  # 30 alles erdoor, per 128 de errors udaten, validation split = apart houden en niet aanbieden (om te testen voor overfit)
+  history <- model %>% fit(
+    x_train, y_train, 
+    epochs = 30, batch_size = 128, 
+    validation_split = 0.2
+  )
+  
+  
+  #BOVENAAN=>blauw= de training set, groen = de validatie set. Na 30 epochs zien we een discrepantie tussen de twee curves wat op over-fitting wijst
+  #ONDERNAAN=>de accuracy (hier zie je ook de divergentie)
+  plot(history)
+  
+  model %>% evaluate(x_test, y_test)
+  
+  model %>% predict_classes(x_test)
+  
 }
 
-head(y_train)
+  #simpsons (logistisc)
+  {
+  data <- read.csv(file="simpsons_orig.csv", sep=";")
+  
+  #matrix maken van de dataframe met trainingsdata (enkel met de bruikbare data)
+  x_train <-as.matrix(data[,3:5])
+  
+  #de target vector mag geen nominale data bevatten, dus omzetten
+  y_train <- as.matrix(ifelse(data$Geslacht == "M", 0, 1))
+  
+  #normaliseer data met range 1-0
+  x_train<- normalize(x_train)
+  
+  model <- keras_model_sequential() 
+  model %>% 
+    layer_dense(units = 64, activation = 'relu', input_shape = c(3)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
+    layer_dense(units = 32, activation = 'relu') %>%
+    layer_dense(units= 16, activation = 'relu') %>%
+    layer_dense(units = 1, activation = 'sigmoid') #sigmoid voor 0/1 te bekomen
+  
+  summary(model)
+  
+  
+  ###verschillende activatie functies
+  #lineaire
+  # sigmoid
+  
+  #Sigmoid functions and their combinations usually work better for classification 
+  ##techniques ex. Binary Classification 0s and 1s.
+  
+  # relu
+  
+  ## most popular, but can only be used in the hidden layers
+  
+  
+  # softmax
+  
+  #normalises output: the question than is, why have we normalised the data in the first place? And what is the difference between sigmoid and softmax?
+  
+  #sigmoid is used for two-class logistic regression, whilst softmax is used for multiclass (multinominal) logistic regression
+  
+  
+  # leaky rely
+  # tanh 
+  # elu 
+  
+  
+  model %>% compile(
+    loss = 'binary_crossentropy',
+    optimizer = optimizer_nadam(),
+    metrics = c('accuracy')
+  )
+  
+  ###verschillende soorten loss
+  # binary_crossentropy
+  # categorical_crossentropy
+  
+  ###verschillende soorten optizer
+  #optimizer_rmsprop
+  #optimizer_nadam
+  
+  history <- model %>% fit(
+    x_train, y_train, 
+    epochs = 100, batch_size = 3 
+    #,validation_split = 0.2 #staat uit wegens kleine grote
+  )
+  
+  model %>% predict(x_train)
+  
+  model %>% predict_classes(x_train) #maakt er classes van
+  
+}
 
-# reshape
-x_train <- array_reshape(x_train, c(nrow(x_train), 784))
-x_test <- array_reshape(x_test, c(nrow(x_test), 784))
-# rescale
-x_train <- x_train / 255
-x_test <- x_test / 255
+  ##forecasting_demo (lineare data)
+  {
+  data <- read.csv(file="forcastdemo.csv", sep=",")
+  
+  x_train <- as.matrix(data$index) #blijkbaar moet de index erbij?
+  y_train <- as.matrix(data[,3])
+  
+  #scale() uses Z-score standardisation (it would also be possible to test whether scaling it between 0-1 has an impact)
+  x_train <- scale(x_train)
+  y_train <- scale(y_train)
+  
+  
+  model <- keras_model_sequential() 
+  model %>% 
+    layer_dense(units = 16, activation = 'relu', input_shape = c(1)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
+    layer_dense(units = 1) #no activiation function because it is a regression and we want to predict num. values without transformation
+  
+  summary(model)
+  
+  #possible loss for linear regression:
+    #mean_absolute_error
+    #mean_squared_error
+  #possible metrics
+    #mean_absolute_error
+    #mean_squared_error
+  #possible optimizers
+    #optimizer_rmsprop
+    #optimizer_adam
+  
+  model %>% compile(
+    loss = 'mean_squared_error', #this gives us an error-term which we understand directly (squared revenu)
+    optimizer = optimizer_rmsprop(),
+    metrics = c('mean_absolute_error')
+  )
+  
+  
+  history <- model %>% fit(
+    x_train, y_train, 
+    epochs = 5000, batch_size = 5 
+    #,validation_split = 0.2 #staat uit wegens kleine grote
+  )
+  
+  model %>% predict(x_train)
+  plot(x_train, y_train, type="b")
+  points(x_train, model %>% predict(x_train), type="b", col="red")
+  
+}
 
-dim(x_test)
-dim(x_train)
+  ## IRIS (multinominal logistic)
+  {
+    data("iris")
+    data <- iris
+    
+    data$Species<- recode(data$Species,"'setosa'= 0;'versicolor'= 1;'virginica'=2 ") #oppassen met 1. based!!!
 
-y_train <- to_categorical(y_train, 10)
-y_test <- to_categorical(y_test, 10)
-
-
-#4 layers, (1) input = 784 (28*28), (2) hidden 256, (3) 128, (4) 10
-model <- keras_model_sequential() 
-model %>% 
-  layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>% 
-  layer_dropout(rate = 0.4) %>% 
-  layer_dense(units = 128, activation = 'relu') %>%
-  layer_dropout(rate = 0.3) %>%
-  layer_dense(units = 10, activation = 'softmax')
-
-summary(model)
-
-
-model %>% compile(
-  loss = 'categorical_crossentropy', #kost functie
-  optimizer = optimizer_rmsprop(),
-  metrics = c('accuracy')
-)
-
-# 30 alles erdoor, per 128 de errors udaten, validation split = apart houden en niet aanbieden (om te testen voor overfit)
-history <- model %>% fit(
-  x_train, y_train, 
-  epochs = 30, batch_size = 128, 
-  validation_split = 0.2
-)
-
-
-#BOVENAAN=>blauw= de training set, groen = de validatie set. Na 30 epochs zien we een discrepantie tussen de twee curves wat op over-fitting wijst
-#ONDERNAAN=>de accuracy (hier zie je ook de divergentie)
-plot(history)
-
-model %>% evaluate(x_test, y_test)
-
-model %>% predict_classes(x_test)
+    rows <- sample(1:nrow(data), 30 )
+    test.data <- data[rows,]
+    train.data <- data[-rows,]
+    
+    x_train <- normalize(as.matrix(train.data[,1:4]))
+    y_train <- as.matrix(train.data[,5])
+    
+    x_test <- normalize(as.matrix(test.data[,1:4]))
+    y_test <- as.matrix(test.data[,5])
+    
+    y_train <- to_categorical(y_train) 
+    y_test <- to_categorical(y_test)
+    
+    model <- keras_model_sequential() 
+    model %>% 
+      layer_dense(units = 64, activation = 'relu', input_shape = c(4)) %>% 
+      layer_dense(units= 32, activation = 'relu') %>%
+      layer_dense(units = 3, activation = 'softmax') 
+    
+    summary(model)
+    
+    model %>% compile(
+      loss = 'categorical_crossentropy',
+      optimizer = optimizer_rmsprop(),
+      metrics = c('accuracy')
+    )
+   
+    early_stopping <- callback_early_stopping(monitor = 'val_loss', patience = 10)# het aantal epochs zonder verbetering
+    history <- model %>% fit(
+      x_train, y_train, 
+      epochs = 100, batch_size = 3 
+      ,validation_split = 0.2
+      , callbacks = c(early_stopping)
+    )
+    
+    
+  }
 }
 
 
-#simpsons
-data <- read.csv(file="simpsons_orig.csv", sep=";")
-
-#matrix maken van de dataframe met trainingsdata (enkel met de bruikbare data)
-x_train <-as.matrix(data[,3:5])
-
-#de target vector mag geen nominale data bevatten, dus omzetten
-y_train <- as.matrix(ifelse(data$Geslacht == "M", 0, 1))
-
-#normaliseer data met range 1-0
-x_train<- normalize(x_train)
-
-model <- keras_model_sequential() 
-model %>% 
-  layer_dense(units = 64, activation = 'relu', input_shape = c(3)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
-  layer_dense(units = 32, activation = 'relu') %>%
-  layer_dense(units= 16, activation = 'relu') %>%
-  layer_dense(units = 1, activation = 'sigmoid') #sigmoid voor 0/1 te bekomen
-
-summary(model)
-
-
-###verschillende activatie functies
-#lineaire
-# sigmoid
-
-#Sigmoid functions and their combinations usually work better for classification 
-##techniques ex. Binary Classification 0s and 1s.
-
-# relu
-
-## most popular, but can only be used in the hidden layers
-
-
-# softmax
-
-#normalises output: the question than is, why have we normalised the data in the first place? And what is the difference between sigmoid and softmax?
-
-#sigmoid is used for two-class logistic regression, whilst softmax is used for multiclass (multinominal) logistic regression
-
-
-# leaky rely
-# tanh 
-# elu 
-
-
-model %>% compile(
-  loss = 'binary_crossentropy',
-  optimizer = optimizer_nadam(),
-  metrics = c('accuracy')
-)
-
-###verschillende soorten loss
-# binary_crossentropy
-# categorical_crossentropy
-
-###verschillende soorten optizer
-#optimizer_rmsprop
-#optimizer_nadam
-
-history <- model %>% fit(
-  x_train, y_train, 
-  epochs = 100, batch_size = 3 
-  #,validation_split = 0.2 #staat uit wegens kleine grote
-)
-
-model %>% predict(x_train)
-
-model %>% predict_classes(x_train) #maakt er classes van
-
-
-##forecasting
-
-data <- read.csv(file="forcastdemo.csv", sep=",")
-
-x_train <- as.matrix(data[,2])
-y_train <- as.matrix(data[,3])
-
-#scale() uses Z-score standardisation
-x_train <- scale(x_train)
-y_train <- scale(y_train)
-
-
-model <- keras_model_sequential() 
-model %>% 
-  layer_dense(units = 64, activation = 'linear', input_shape = c(1)) %>% #64 is hier zeer arbitrair, gebruikelijk is een waarde kiezen tussen de input & output, maar waarschijnlijk is de input hier te klein voor
-  layer_dense(units = 32, activation = 'linear') %>%
-  layer_dense(units= 16, activation = 'linear') %>%
-  layer_dense(units = 1, activation = 'linear') 
-
-summary(model)
-}
 
 
 

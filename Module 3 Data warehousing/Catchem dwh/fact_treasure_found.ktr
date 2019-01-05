@@ -430,7 +430,7 @@
     <created_date>2019/01/02 15:51:14.350</created_date>
     <modified_user>-</modified_user>
     <modified_date>2019/01/02 15:51:14.350</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -579,8 +579,8 @@
     </hop>
   </order>
   <step>
-    <name>Table input</name>
-    <type>TableInput</type>
+    <name>Database lookup</name>
+    <type>DBLookup</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -589,15 +589,29 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
-    <sql>  SELECT TOP 5000 CONVERT(varchar(255), id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), treasure_id, 2) treasure_id, CONVERT(varchar(255), hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME()
-  FROM dbo.treasure_log
-  WHERE log_type =2 ; </sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
+    <connection>Dwh Catchem</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>season</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>log_date</name>
+        <field>DATE_SK</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>DATE_SK</name>
+        <rename>day_id</rename>
+        <default/>
+        <type>String</type>
+      </value>
+    </lookup>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -607,7 +621,7 @@
     </remotesteps>
     <GUI>
       <xloc>384</xloc>
-      <yloc>288</yloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -668,53 +682,6 @@
     </remotesteps>
     <GUI>
       <xloc>672</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Database lookup</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>Dwh Catchem</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>season</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
-      <key>
-        <name>log_time</name>
-        <field>DAY_DATE</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>DATE_SK</name>
-        <rename>day_id</rename>
-        <default/>
-        <type>String</type>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>512</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -735,10 +702,16 @@
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>fact_treasure2</table>
+      <table>fact_treasure8</table>
       <key>
         <name>id</name>
-        <field>id</field>
+        <field>Log_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>hunter_id</name>
+        <field>User_id</field>
         <condition>=</condition>
         <name2/>
       </key>
@@ -755,7 +728,7 @@
       <value>
         <name>User_id</name>
         <rename>u_id</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
         <name>Duration</name>
@@ -770,7 +743,7 @@
       <value>
         <name>Log_id</name>
         <rename>id</rename>
-        <update>Y</update>
+        <update>N</update>
       </value>
       <value>
         <name>Day_id</name>
@@ -786,7 +759,40 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>896</xloc>
+      <xloc>912</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Table input</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>catchem</connection>
+    <sql>  SELECT TOP 5000 CONVERT(varchar(255), id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), treasure_id, 2) treasure_id, CONVERT(varchar(255), hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME()
+  FROM dbo.treasure_log
+  WHERE log_type =2 ; </sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>

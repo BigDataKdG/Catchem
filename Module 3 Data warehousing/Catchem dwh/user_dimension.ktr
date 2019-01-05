@@ -644,11 +644,6 @@
         <update>Punch through</update>
       </field>
       <field>
-        <name>owner_id</name>
-        <lookup>owner_id</lookup>
-        <update>Punch through</update>
-      </field>
-      <field>
         <name>number_treasures</name>
         <lookup>number_treasures</lookup>
         <update>Punch through</update>
@@ -717,7 +712,7 @@
     </formula>
     <formula>
       <field_name>dedicator</field_name>
-      <formula_string>IF([number_treasures] > 0; "Yes";"No")</formula_string>
+      <formula_string>IF([number_treasures] > 1; "Yes";"No")</formula_string>
       <value_type>String</value_type>
       <value_length>-1</value_length>
       <value_precision>-1</value_precision>
@@ -754,7 +749,7 @@
       <key>u_id</key>
     </keys_1>
     <keys_2>
-      <key>owner_id</key>
+      <key>u_id</key>
     </keys_2>
     <cluster_schema/>
     <remotesteps>
@@ -816,11 +811,11 @@ order by 1 asc;</sql>
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), owner_id, 2) owner_id, count(*) 'number_treasures'
-FROM dbo.treasure
-group by owner_id
-order by 1 asc;
-</sql>
+    <sql>select CONVERT(varchar(255), u.id, 2) u_id, count(*) 'number_treasures'
+FROM dbo.treasure 
+RIGHT JOIN dbo.user_table u on owner_id = u.id
+group by u.id, owner_id
+order by 1 asc;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
