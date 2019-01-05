@@ -701,7 +701,7 @@
     </partitioning>
     <formula>
       <field_name>experience_level</field_name>
-      <formula_string>IF([logs_found]=0; "Newbie"; IF([logs_found] >10; "Expert"; IF([logs_found] &lt;3; "Amature"; "Regular")))
+      <formula_string>IF(isna([t_id]); "Newbie"; IF([logs_found] >10; "Expert"; IF([logs_found] &lt;3; "Amature"; "Regular")))
 
 
 </formula_string>
@@ -776,10 +776,10 @@
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, count(*) logs_found
+    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
 FROM dbo.user_table u
-JOIN dbo.treasure_log t ON u.id = t.hunter_id
-GROUP by u.id, first_name, last_name, street, number, city_city_id
+LEFT JOIN dbo.treasure_log t ON u.id = t.hunter_id
+GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id
 order by 1 asc;</sql>
     <limit>0</limit>
     <lookup/>
