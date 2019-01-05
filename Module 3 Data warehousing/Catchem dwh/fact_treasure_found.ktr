@@ -436,74 +436,11 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem</name>
+    <name>${DB_NAME_DWH}</name>
     <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>catchem</database>
-    <port>1433</port>
-    <username>SA</username>
-    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
-        <attribute>SQLSERVER2017</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>MSSQLUseIntegratedSecurity</code>
-        <attribute>false</attribute>
-      </attribute>
-      <attribute>
-        <code>MSSQL_DOUBLE_DECIMAL_SEPARATOR</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>1433</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>Dwh Catchem</name>
-    <server>127.0.0.1</server>
-    <type>MSSQLNATIVE</type>
-    <access>Native</access>
-    <database>Dwh Catchem</database>
+    <database>${DB_NAME_DWH}</database>
     <port>1433</port>
     <username>DB4</username>
     <password>Encrypted 2be98afc86aa7f2e4cb79ce10beb68d8e</password>
@@ -561,6 +498,69 @@
       </attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>${DB_NAME}</name>
+    <server>localhost</server>
+    <type>MSSQLNATIVE</type>
+    <access>Native</access>
+    <database>${DB_NAME}</database>
+    <port>1433</port>
+    <username>${DB_USERNAME} </username>
+    <password>${DB_PASSWORD}</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
+        <attribute>${INSTANCE_NAME}</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>MSSQLUseIntegratedSecurity</code>
+        <attribute>false</attribute>
+      </attribute>
+      <attribute>
+        <code>MSSQL_DOUBLE_DECIMAL_SEPARATOR</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>1433</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
       <from>Table input</from>
@@ -568,13 +568,18 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Database lookup</from>
-      <to>Dimension lookup/update</to>
+      <from>Dimension lookup/update</from>
+      <to>Insert / Update</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Dimension lookup/update</from>
-      <to>Insert / Update</to>
+      <from>Database lookup</from>
+      <to>Database lookup 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Database lookup 2</from>
+      <to>Dimension lookup/update</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -589,7 +594,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Dwh Catchem</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <cache>N</cache>
     <cache_load_all>N</cache_load_all>
     <cache_size>0</cache_size>
@@ -620,8 +625,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
-      <yloc>192</yloc>
+      <xloc>208</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -638,7 +643,7 @@
     </partitioning>
     <schema/>
     <table>user_dim</table>
-    <connection>Dwh Catchem</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <commit>100</commit>
     <update>N</update>
     <fields>
@@ -681,7 +686,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
+      <xloc>432</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -697,7 +702,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Dwh Catchem</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
@@ -750,6 +755,11 @@
         <rename>day_id</rename>
         <update>Y</update>
       </value>
+      <value>
+        <name>Weather_id</name>
+        <rename>weather_id</rename>
+        <update>Y</update>
+      </value>
     </lookup>
     <cluster_schema/>
     <remotesteps>
@@ -759,8 +769,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
-      <yloc>288</yloc>
+      <xloc>608</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -775,9 +785,14 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
-    <sql>  SELECT TOP 5000 CONVERT(varchar(255), id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), treasure_id, 2) treasure_id, CONVERT(varchar(255), hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME()
-  FROM dbo.treasure_log
+    <connection>${DB_NAME}</connection>
+    <sql>   SELECT TOP(5000) CONVERT(varchar(255), id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), tl.treasure_id, 2) treasure_id, CONVERT(varchar(255), 
+hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME(), 
+"city_id" = (SELECT city_city_id
+			FROM dbo.treasure t
+			JOIN dbo.treasure_log on t.id = treasure_id
+			WHERE t.id = CONVERT(varchar(255), tl.treasure_id, 2)) 
+  FROM dbo.treasure_log tl
   WHERE log_type =2 ; </sql>
     <limit>0</limit>
     <lookup/>
@@ -792,8 +807,55 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
-      <yloc>288</yloc>
+      <xloc>96</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Database lookup 2</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>${DB_NAME_DWH}</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>weather_hist</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>city_id</name>
+        <field>city_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>weather_id</name>
+        <rename>weather_id</rename>
+        <default/>
+        <type>String</type>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

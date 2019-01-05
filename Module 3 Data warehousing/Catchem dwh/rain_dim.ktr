@@ -436,7 +436,7 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem_dwh</name>
+    <name>${DB_NAME_DWH}</name>
     <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
@@ -577,7 +577,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem_dwh</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <schema>dbo</schema>
     <table>dim_rain</table>
     <commit>1000</commit>
