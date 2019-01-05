@@ -26,6 +26,8 @@
     
     <xsl:template match="/">
         <xsl:for-each select="CountryList/country">
+            INSERT [dbo].[country] ([country_name], [sc], [lc]) VALUES ('
+            <xsl:value-of select="@co_name"/>', '<xsl:value-of select="@sc"/>', '<xsl:value-of select="@lc"/>');
             <xsl:for-each select="city">
                 <xsl:variable name="cityId">(SELECT CAST(N'' AS XML).value('xs:base64Binary("<xsl:value-of select="@city_id"/>")', 'BINARY(16)'))
                 </xsl:variable>
