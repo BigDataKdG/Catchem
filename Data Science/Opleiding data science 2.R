@@ -21,9 +21,9 @@ dbinom(x,n,p)
 #n= aantal keer herhaling
 #p= de kans 
 
-# voor ranges (check this again)
-cumsum(dbinom(3,n,p)) #minder dan
-1- cumsum(dbinom(3,n,p)) #meer dan
+# voor ranges 
+pbinom(x,n,p) #minder dan
+1- pbinom(x,n,p) #meer dan
 
 
 #gemiddelde aantal gebeurtenis, gegeven kans
@@ -32,13 +32,14 @@ cumsum(dbinom(3,n,p)) #minder dan
 ##Poissionverdeling
 # als een gebeurtenis verschilende keren voorkomt
 
-dpos(x,mu)
+dpois(x,mu)
 #x = antal keren dat het voorkomt
 #mu = aantal keren het gemiddeld voorkomt
 
-#voor ranges
-cumsum(dpos(x,mu))
-1-cumsum(dpos(x,mu))
+#voor ranges 
+1-ppois(x,mu)
+ppois(x,mu)
+
 
 #formules
 mu = n*p #verwachte waarden binom
@@ -56,21 +57,29 @@ pnorm(x, mean=0, sd=1)-pnorm(x, mean=0,sd=1)#tussen 2 waarden
 }
 
 #Les 2 toetsen
+
 {
 data <- read.csv(file="haarkleurbrussel.csv")
-
-#CHI² testing
+data
+#CHI?? testing
 #h0= er van uitgaan dat de verdeling evenredig/ niet afwijkt/hetzelfde is
 #data <- rep(c('IO', 'OP', 'MF', 'GC'), c(8,10,10,12))
-observerd  <-table(data)
-expected <- c(5,17,8, 10)#in frequencie, maar werkt ook met percenten!
+observerd  <-table(data) # (fo)
+expected <- c(5,17,8,10)#in frequencie, maar werkt ook met percenten! (fe)
 X = chisq.test(x=observerd, p=expected, rescale.p=T)
 X$statistic
 X$p.value #kans dat een extremere waarden wordt gevonden (onder de 0.05% = significant, H0= verworpen)
 
+# alternatief voor chisq.test 
+critValue = signif(qchisq(0.99, 3),4)
+chiKwadraat = signif(sum((fo-fe)^2/fe),4)
+pValue = signif(1-pchisq(14.61,3),3)
+
+
 b = 0.99
 m = length(data)
-criticalvalue<- qchisq(b,m-1)
+# m - 1 = vrijheidsgraden (df), ook wel t genoemd. Spreiding van de t-verdeling
+criticalvalue<- qchisq(b,m-1) # qchisq = quantile function, vind de x waarde die bij percentiel b ligt, critical value voor dit percentiel
 criticalvalue
 
 
@@ -81,8 +90,9 @@ pt(x, df=)
 qt(x, df=)
 
 #intervals met normale verdeling
-##als sigma gekend is of grote steekproef
+##als sigma gekend is of grote steekproef --> Z TEST
 #op basis van een steekproef iets zeggen over de populatie
+# b = gewenste betrouwbaarheid
 b= 0.99 
 f = qnorm((1+b)/2) #factor op basis van zekerheid
 m = 11.9#mean(x)
@@ -131,7 +141,7 @@ qnorm(0.1, mean= -0.545, sd=0.008/sqrt(5), lower.tail=FALSE) #vinden van kritiek
 #m = mean
 # n= sample
 # b = betrouwbaarheid
-# s = standaar afwijking
+# s = standaard afwijking
 m <- 11.9
 b <- 0.99
 a <- 0.01
@@ -152,7 +162,7 @@ t = (mo-m) / (s/sqrt(n)) #t = (mo-m) / s *sqrt(n)
 p <- pt(-abs(t), n-1) *2
 p
 
-#↔t-test eenzijdig
+#???t-test eenzijdig
 n <- 5
 m <- -0.545
 mo <- -0.539
@@ -165,7 +175,7 @@ p
 #
 t = t.test(laptops, conf.level=0.95, mu=50)
 t$p.value
-#Merk op dat je in bovenstaande code de waarde van alternative op greater zet als de hypothese
+#Merk op dat je in onderstaande code de waarde van alternative op greater zet als de hypothese
 #zegt dat de waarde kleiner is. Dat is misschien een beetje verwarrend.
 t=t.test(laptops, conf.level=0.95, mu=32, alternative="greater")
 t$p.value
@@ -191,7 +201,7 @@ data <- read.csv(file="Knapsack Items.csv", sep=";")
 # Define data 
 p <- data$gewichten.gr. # Profits 
 w <- data$waarde # Weights 
-W <- 750 # Knapsack ’s capacity 
+W <- 750 # Knapsack ???s capacity 
 n <- length(p) # Number of items
 
 # Define fitness function 
@@ -221,7 +231,7 @@ sum(x.star * w) # Total weight of selected items: 9
 
 p <- data$gewichten.gr. # Profits 
 w <- data$waarde # Weights 
-W <- 750 # Knapsack ’s capacity 
+W <- 750 # Knapsack ???s capacity 
 n <- length(p) # Number of items
 
 
@@ -247,7 +257,7 @@ print(sum(x.star * w)) # Total weight of selected items
 # Define data 
 p <- data$gewichten.gr. # Profits 
 w <- data$waarde # Weights 
-W <- 750 # Knapsack ’s capacity 
+W <- 750 # Knapsack ???s capacity 
 n <- length(p) # Number of items
 
 # Define fitness function 
@@ -292,7 +302,7 @@ sa$par
 library("MASS")
 
 #aantal dimensies = 
- # - aantal categorieën afhank - 1
+ # - aantal categorie??n afhank - 1
  # - aantal indep 
  # = minimum van deze twee
 
