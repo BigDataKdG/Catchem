@@ -188,6 +188,22 @@ t$p.value
 }
 
 #Les 3: genetische Algoritmen
+
+##### INFO #####
+
+# GenSA (sim anealing) -> waarde minimaliseren, GA -> waarde optimaliseren
+# Bij GenSA moet je in de return dus (altijd??) een - teken zetten om de laagste waarde te returnen
+
+# TYPE GA kiezen (uit docs):
+# the type of genetic algorithm to be run depending on the nature of decision variables. Possible values are:
+  
+#  "binary" for binary representations of decision variables.
+
+# "real-valued" for optimization problems where the decision variables are floating-point representations of real numbers.
+
+# "permutation" for problems that involves reordering of a list of objects.
+################
+
 {
 library("GA")
 library("GenSA")
@@ -199,8 +215,8 @@ data <- read.csv(file="Knapsack Items.csv", sep=";")
 #knapsack problem with SA
 
 # Define data 
-p <- data$gewichten.gr. # Profits 
-w <- data$waarde # Weights 
+p <- data$waarde # Profits 
+w <- data$gewichten # Weights 
 W <- 750 # Knapsack ???s capacity 
 n <- length(p) # Number of items
 
@@ -297,7 +313,23 @@ sa$par
 
 }
 
+## monitor functie overgenomen uit les, maar werkt niet :/
+
+monitor.function = function(obj) {
+  curve(objective.function, 0, 100, main = paste("iteration = ", obj@iter), font.main = 1)
+  points(obj@population, obj@fitness, pch = 20, col = 2)
+  rug(obj@population, col = 2)
+}
+
 #Les 4: discriminant analyse
+
+##### INFO #####
+
+# Tips:
+    ## verwijder niet-ratio variables
+    ## verwijder NA's, prcomp kan hier niet mee om! na.omit(predictoren)
+
+################
 {
 library("MASS")
 
