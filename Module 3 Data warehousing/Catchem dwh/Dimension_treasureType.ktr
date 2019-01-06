@@ -436,11 +436,11 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem</name>
+    <name>${DB_NAME_DWH}</name>
     <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME}</database>
+    <database>${DB_NAME_DWH}</database>
     <port>1433</port>
     <username>${DB_USERNAME}</username>
     <password>${DB_PASSWORD}</password>
@@ -499,11 +499,11 @@
     </attributes>
   </connection>
   <connection>
-    <name>catchem_dwh</name>
+    <name>${DB_NAME}</name>
     <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>${DB_NAME_DWH}</database>
+    <database>${DB_NAME}</database>
     <port>1433</port>
     <username>${DB_USERNAME}</username>
     <password>${DB_PASSWORD}</password>
@@ -579,8 +579,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
-    <sql>SELECT treasure_id, terrain, difficulty, count(*) 'size'
+    <connection>${DB_NAME}</connection>
+    <sql>SELECT CONVERT(varchar(255), treasure_id, 2) treasure_id, terrain, difficulty, count(*) 'size'
 FROM dbo.treasure_stages
 JOIN dbo.treasure ON (id = treasure_id)
 GROUP BY treasure_id, terrain, difficulty;</sql>
@@ -613,7 +613,7 @@ GROUP BY treasure_id, terrain, difficulty;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem_dwh</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <schema>dbo</schema>
     <table>treasure_found</table>
     <commit>1000</commit>

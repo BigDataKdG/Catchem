@@ -185,7 +185,6 @@ library("GenSA")
 
 data <- read.csv(file="Knapsack Items.csv", sep=";")
 
-
 #knapsack problem with SA
 
 # Define data 
@@ -284,6 +283,8 @@ sa = GenSA(par=b,
   upper = 400) 
 
 sa$par
+
+#dakgoten = FRE
 
 }
 
@@ -647,31 +648,66 @@ install_keras()
     early_stopping <- callback_early_stopping(monitor = 'val_loss', patience = 10)# het aantal epochs zonder verbetering
     history <- model %>% fit(
       x_train, y_train, 
-      epochs = 100, batch_size = 3 
+      epochs = 200, batch_size = 5 
       ,validation_split = 0.2
       , callbacks = c(early_stopping)
     )
     
     
+    model %>% evaluate(x_test, y_test)
+    
+    model %>% predict_classes(x_train)
+    ##laatste vraag L nog doen! (is goede overgang)
   }
 }
 
-
-
-
-
-
-
-
 #Les 6: Evaluatie Metrieken
 {
-  #cheat
-   # Sensitivity = RECALL = TPR
-   # Specifciity = 1-FPR 
+  library("caret")
+  TP <- 100 # foutloos als positief
+  TN <- 50 #  foutloos als negatief
+  FP <- 10 # valselijk positief (Voorpeling = positief, maar is eig negatief)
+  FN <- 5 # valselijk negatief (Voorspelling = negatief, maar is eig positief)
+  
+  TP <- 40 # foutloos als positief
+  TN <- 30 #  foutloos als negatief
+  FP <- 10 # valselijk positief (Voorpeling = positief, maar is eig negatief)
+  FN <- 20 # valselijk negatief (Voorspelling = negatief, maar is eig positief)
+  
+  matrix <- matrix(c(50,10,5,100),2)
+  matrix
+  matrix <- matrix(c(40,20,10,30),2)
+  matrix
   
   
- #in carret package?
-   #confusion matrix
+    #accuracy 
+    ACC <-  (TP+TN)/(TP+FP+TN+FN)
+    ACC
+  
+    #precision, hoe goed is de classifier in het selecteren van TRUE Positives
+    # Slechts 1 correcte positieve aanduiden zou 100% geven 1/1+99=100
+    PR <- TP/(TP+FP)
+    PR
+    #RECALL, hoeveel positieve instanties (van alle positieve) kan de clasifier aanduiden
+    # alles als positief categoriseren = hoogste recall 
+    #RECALL = TPR!
+    RE <- TP/(TP+FN)
+    RE
+
+    #F-measure
+    R <- RE #TP/TP+FN
+    P <- PR #TP/TP+FP
+    a <- 0.5 # 0.5=evenwicht, a=1 of a > 1 (=b=0 of b<1) = meer precision, a=0 of a < 1 (=inf of =b>1) = recall
+    b <- (1-a)/a # a <- 1/(b+1)
+    F <- (b^2+ 1)*P*R/(b^2*P+R)
+    F
+    
+    #FPR
+    FPR <- FP/(FP+TN)
+    TPR <- TP/(TP+FN)
+ 
+  
+   #confusion matrix (multiclass)
   
   values <- c(2385,4,0,1,4,0,332,0,0,1,0,1,908,8,0,0,0,0,1084,9,12,0,0,6,2053)
   confusion.matrix <- matrix(values, byrow=T, ncol=5)
@@ -707,6 +743,7 @@ install_keras()
   
   precision(confusion.matrix)
   
+  
   precision <- function(cm,g = FALSE)
   {
     ps <- diag(cm)/rowSums(cm)
@@ -718,7 +755,27 @@ install_keras()
   
   precision(confusion.matrix, g= TRUE )
   
-  #de rest ook in functies zetten!
+  
+  #test
+  recall <- function(matrix)
+  {
+    return(diag(matrix)/colSums(matrix))
+    
+  }
+  
+  
+  
+  
+  
+  fmeasure <- function(matrix, b)
+  {
+    P <- diag(matrix)/rowSums(matrix)
+    R <- diag(matrix)/colSums(matrix)
+    F <- (b^2+ 1)*P*R/(b^2*P+R)
+    return(F)
+    
+  }
+  fmeasure(matrix,1)
   
   #Fmeasure
   
@@ -739,6 +796,8 @@ install_keras()
   # -0.445 = t
   # 0.922 = TPR
   # 1-0.926 = FPR
+   
+   
    
    
   
