@@ -804,3 +804,152 @@ install_keras()
   
   
 }
+##################################
+#####                        #####
+##### LES 6 OPLOSSINGEN JENS #####
+#####                        #####
+##################################
+
+## VRAAG 1
+
+confusion.matrix = matrix(c(50, 10, 5, 100),nrow = 2, ncol = 2)
+rownames(confusion.matrix) = c('Predicted NO', 'Predicted YES')
+colnames(confusion.matrix) = c('Actual NO', 'Actual YES')
+confusion.matrix
+accuracy = function(cm, total = F) {
+  sum(diag(cm)) / sum(rowSums(cm))
+}
+accuracy(confusion.matrix)
+
+# precision = tp/(tp+fp)
+precision = function(cm, total = F) {
+  ps = diag(cm)/rowSums(cm)
+  if (total == T) {
+    return(weighted.mean(ps, rowSums(cm)))
+  }
+  return(ps)
+}
+
+precision(confusion.matrix)
+
+# recall = tp / (tp + fn)
+recall = function(cm, total = F) {
+  rc = diag(cm)/colSums(cm)
+  if (total == T) {
+    return(weighted.mean(rc, colSums(cm)))
+  }
+  return (rc)
+}
+
+recall(confusion.matrix)
+
+# f-measure
+f_measure = function(cm, beta = 1, total = F) {
+  (beta^2 + 1) * precision(cm) * recall(cm)/((beta^2) * precision(cm) + recall(cm))
+}
+
+f_measure(confusion.matrix, beta = 1)
+
+# TPR = recall
+# FPR = fp / (fp/tn)
+fpr = function(cm) {
+  diag(cm[nrow(cm):1, ]) / colSums(cm)
+}
+
+fpr(confusion.matrix)
+
+
+## VRAAG 2
+
+confusion.matrix = matrix(c(100, 0, 50, 5),nrow = 2, ncol = 2)
+
+rownames(confusion.matrix) = c('Predicted A', 'Predicted B')
+colnames(confusion.matrix) = c('Actual A', 'Actual B')
+
+accuracy(confusion.matrix)
+precision(confusion.matrix)
+recall(confusion.matrix)
+f_measure(confusion.matrix)
+
+# c) precision voor A ligt vrij laag, recall en f1 heel laag voor B
+
+## VRAAG 3
+
+confusion.matrix = matrix(c(2385, 0, 0, 0, 12, 4, 332, 1, 0, 0, 0, 0, 908, 0, 0, 1, 0, 8, 1084, 6, 4, 1, 0, 9, 2053),nrow = 5, ncol = 5)
+
+rownames(confusion.matrix) = c('Predicted Asfalt', 'Predicted Beton', 'Predicted Gras', 'Predicted Boom', 'Predicted Gebouw')
+colnames(confusion.matrix) = c('Actual Asfalt', 'Actual Asfalt', 'Actual Gras', 'Actual Boom', 'Actual Gebouw')
+
+precision(confusion.matrix)
+recall(confusion.matrix)
+f_measure(confusion.matrix)
+
+
+## VRAAG 4
+
+library(pROC)
+setwd('/Users/JeBo/Documents/KdG/data-science2/6 Neurale Netwerken/datasets')
+simpsons = read.csv('simpsons_orig.csv', sep=';')
+
+x_train = normalize(as.matrix(simpsons[,3:5]))
+y_train = as.matrix(ifelse(simpsons$Geslacht == 'M', 0, 1))
+model = keras_model_sequential()
+model %>% 
+  layer_dense(units=64, activation = 'relu', input_shape = c(3)) %>% 
+  layer_dense(units = 32, activation = 'relu') %>% 
+  layer_dense(units=16, activation = 'relu') %>%
+  layer_dense(units=1, activation = 'sigmoid')
+
+model %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_nadam(),
+  metrics = c('accuracy')
+)
+
+history = model %>% fit(
+  x_train, y_train,
+  epochs = 1000, batch_size = 5,
+  # validation_split = 0.2,
+  verbose = 1
+)
+
+pred1 = model %>% predict(x_train)
+pred1.class = model %>% predict_classes(x_train)
+cbind(pred1,pred1.class)
+
+ROC = roc(as.vector(y_train),as.vector(pred1)) 
+#ROC2 = roc(as.vector(y_train),as.vector(pred2))
+
+plot.roc(ROC, print.thres = T, print.auc = T, col="blue")
+# plot.roc(ROC2, add=T, print.thres = T, print.auc = T, col="blue")
+
+predictWithCustomThreshold = function(pred, threshold) {
+  ifelse(pred > threshold, 1, 0)
+}
+predictWithCustomThreshold(pred1, 0.46)
+
+## VRAAG 5
+
+data("infert")
+require(MASS)
+require(pROC)
+
+infert.lda = infert
+infert.lda = infert.lda[!infert.lda$education == '0-5yrs',]
+
+infert.lda$education = droplevels(infert.lda$education)
+
+model1 = lda(education ~ ., data=infert.lda)
+model2 = lda(education ~ age + parity, data=infert.lda)
+
+responses = as.numeric(infert.lda$education)
+
+pred1 = as.vector(predict(model1)$x)
+pred2 = as.vector(predict(model2)$x)
+ROC1 = roc(responses, pred1)
+ROC2 = roc(responses, pred2)
+
+plot.roc(ROC1, print.thres = T, print.auc = T, col="red")
+plot.roc(ROC2, add = T, print.thres = T, print.auc = T, col="blue", print.auc.y = 0.2)
+
+
