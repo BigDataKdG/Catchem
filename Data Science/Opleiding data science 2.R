@@ -323,13 +323,6 @@ monitor.function = function(obj) {
 
 #Les 4: discriminant analyse
 
-##### INFO #####
-
-# Tips:
-    ## verwijder niet-ratio variables
-    ## verwijder NA's, prcomp kan hier niet mee om! na.omit(predictoren)
-
-################
 {
 library("MASS")
 
@@ -388,6 +381,14 @@ data2 <- Cars93[91:93,]
  
  # les 4 PCA
  
+ ##### INFO #####
+ 
+ # Tips:
+ ## verwijder niet-ratio variables
+ ## verwijder NA's, prcomp kan hier niet mee om! na.omit(predictoren)
+ 
+ ################
+ 
  data <- read.csv(file="Protein.csv")
  
  data1 <- data[, -(c(1,2,3,13)) ]
@@ -401,6 +402,8 @@ data2 <- Cars93[91:93,]
  summary(result)
  
  corr(data1)
+ 
+ ## correlatie tussen de verschillende (originele) variabelen. Hoog = goed want betere kans op goeie reductie 
  mean(abs(cor(data1)))
  
  # 5 PCA
