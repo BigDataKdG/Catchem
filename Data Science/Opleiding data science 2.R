@@ -110,7 +110,6 @@ qnorm(0.95,mean=100, sd=18 ) #meer dan 1-kans!
 }
 
 #Les 2 toetsen
-
 {
 data <- read.csv(file="haarkleurbrussel.csv")
 data
@@ -300,7 +299,7 @@ signif(qchisq(0.95, 10),4)
 }
 
 #Les 3: genetische Algoritmen
-
+{
 ##### INFO #####
 
 # GenSA (sim anealing) -> waarde minimaliseren, GA -> waarde optimaliseren
@@ -516,18 +515,15 @@ SGA = ga(type="real-valued",
 )
 
 }
-
-#Les 4.1: discriminant analyse
-## monitor functie overgenomen uit les, maar werkt niet :/
-
-monitor.function = function(obj) {
-  curve(objective.function, 0, 100, main = paste("iteration = ", obj@iter), font.main = 1)
-  points(obj@population, obj@fitness, pch = 20, col = 2)
-  rug(obj@population, col = 2)
+  
+  monitor.function = function(obj) {
+    curve(objective.function, 0, 100, main = paste("iteration = ", obj@iter), font.main = 1)
+    points(obj@population, obj@fitness, pch = 20, col = 2)
+    rug(obj@population, col = 2)
+  }
 }
 
-#Les 4: discriminant analyse
-
+#Les 4.1: discriminant analyse
 {
 library("MASS")
 
