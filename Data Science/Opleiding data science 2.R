@@ -83,6 +83,7 @@ ppois(x,mu) #minder dan
 1-ppois(x,mu) # meer dan
 1-ppois(2,3.5)
 
+
 #formules
 mu = n*p #verwachte waarden binom
 sqrt(n*p*(1-p)) # verwachte standaard afwijking binom
@@ -109,29 +110,37 @@ qnorm(0.95,mean=100, sd=18 ) #meer dan 1-kans!
 }
 
 #Les 2 toetsen
+
 {
 data <- read.csv(file="haarkleurbrussel.csv")
-
-#CHI² testing
+data
+#CHI?? testing
 #h0= er van uitgaan dat de verdeling evenredig/ niet afwijkt/hetzelfde is
-#data <- rep(c('IO', 'OP', 'MF', 'GC'), c(17,10,8,5))
-observerd  <-table(data)
-expected <- c(12,8,10,10)#in frequencie, maar werkt ook met percenten!
+#data <- rep(c('IO', 'OP', 'MF', 'GC'), c(8,10,10,12))
+observerd  <-table(data) # (fo)
+expected <- c(5,17,8,10)#in frequencie, maar werkt ook met percenten! (fe)
 X = chisq.test(x=observerd, p=expected, rescale.p=T)
 X$statistic #wat is de X²
 X$p.value #kans dat een extremere waarden wordt gevonden (onder de 0.05% = significant, H0= verworpen)
 
-#wat is de krtieke waarde
+# alternatief voor chisq.test 
+critValue = signif(qchisq(0.99, 3),4)
+chiKwadraat = signif(sum((fo-fe)^2/fe),4)
+pValue = signif(1-pchisq(14.61,3),3)
+
+
 b = 0.99
-m = 3 #(n-1)
-criticalvalue<- qchisq(b,m)
+m = length(data)
+# m - 1 = vrijheidsgraden (df), ook wel t genoemd. Spreiding van de t-verdeling
+criticalvalue<- qchisq(b,m-1) # qchisq = quantile function, vind de x waarde die bij percentiel b ligt, critical value voor dit percentiel
 criticalvalue
 
 
 #intervals met normale verdeling
-##als sigma gekend is of grote steekproef
+##als sigma gekend is of grote steekproef --> Z TEST
 #op basis van een steekproef iets zeggen over de populatie
-b= 0.90 
+# b = gewenste betrouwbaarheid
+b= 0.99 
 f = qnorm((1+b)/2) #factor op basis van zekerheid
 mo = 11.9#mean(x)
 s = 1 #sd(x)
@@ -260,7 +269,7 @@ p <- pt(t, n-1)
 #
 t = t.test(laptops, conf.level=0.95, mu=50)
 t$p.value
-#Merk op dat je in bovenstaande code de waarde van alternative op greater zet als de hypothese
+#Merk op dat je in onderstaande code de waarde van alternative op greater zet als de hypothese
 #zegt dat de waarde kleiner is. Dat is misschien een beetje verwarrend.
 t=t.test(laptops, conf.level=0.95, mu=32, alternative="greater")
 t$p.value
@@ -291,6 +300,22 @@ signif(qchisq(0.95, 10),4)
 }
 
 #Les 3: genetische Algoritmen
+
+##### INFO #####
+
+# GenSA (sim anealing) -> waarde minimaliseren, GA -> waarde optimaliseren
+# Bij GenSA moet je in de return dus (altijd??) een - teken zetten om de laagste waarde te returnen
+
+# TYPE GA kiezen (uit docs):
+# the type of genetic algorithm to be run depending on the nature of decision variables. Possible values are:
+  
+#  "binary" for binary representations of decision variables.
+
+# "real-valued" for optimization problems where the decision variables are floating-point representations of real numbers.
+
+# "permutation" for problems that involves reordering of a list of objects.
+################
+
 {
 library("GA") #genetic algorithm
 library("GenSA") #simulated annealing
@@ -332,7 +357,7 @@ sum(x.star * w) # Total weight of selected items: 749
 
 p <- data$gewichten.gr. # Profits 
 w <- data$waarde # Weights 
-W <- 750 # Knapsack ’s capacity 
+W <- 750 # Knapsack ???s capacity 
 n <- length(p) # Number of items
 
 
@@ -362,7 +387,11 @@ steden = read.csv("steden.csv", sep=";")
 row.names(steden) = colnames(steden)
 n = length(steden)
 
-# Define fitness function
+# Define data 
+p <- data$gewichten.gr. # Profits 
+w <- data$waarde # Weights 
+W <- 750 # Knapsack ???s capacity 
+n <- length(p) # Number of items
 
 objective.function = function(x) {
   # create indices from x
@@ -489,11 +518,21 @@ SGA = ga(type="real-valued",
 }
 
 #Les 4.1: discriminant analyse
+## monitor functie overgenomen uit les, maar werkt niet :/
+
+monitor.function = function(obj) {
+  curve(objective.function, 0, 100, main = paste("iteration = ", obj@iter), font.main = 1)
+  points(obj@population, obj@fitness, pch = 20, col = 2)
+  rug(obj@population, col = 2)
+}
+
+#Les 4: discriminant analyse
+
 {
 library("MASS")
 
 #aantal dimensies = 
- # - aantal categorieën afhank - 1
+ # - aantal categorie??n afhank - 1
  # - aantal indep 
  # = minimum van deze twee
 #De afhankelijke variabele is minstens op nominale schaal gemeten, 
@@ -568,6 +607,16 @@ predict(m1)$Class
 # variabelen moeten op het ratio niveau gemeten zijn 
 # check for missings
    
+ # les 4 PCA
+ 
+ ##### INFO #####
+ 
+ # Tips:
+ ## verwijder niet-ratio variables
+ ## verwijder NA's, prcomp kan hier niet mee om! na.omit(predictoren)
+ 
+ ################
+ 
  data <- read.csv(file="Protein.csv")
  
  data1 <- data[, -(c(1,2,3,13)) ]
@@ -583,6 +632,10 @@ predict(m1)$Class
  #extra: beslissen welke te behouden
  (result$sdev)^2# alles boven 1
  screeplot(result, type="lines")
+ corr(data1)
+ 
+ ## correlatie tussen de verschillende (originele) variabelen. Hoog = goed want betere kans op goeie reductie 
+ mean(abs(cor(data1)))
  
  result$rotation #ceral weegt door
  s = summary(result)
