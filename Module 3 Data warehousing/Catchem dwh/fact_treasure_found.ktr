@@ -625,7 +625,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
+      <xloc>240</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -686,7 +686,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>480</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -769,8 +769,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>608</xloc>
-      <yloc>272</yloc>
+      <xloc>624</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -808,7 +808,7 @@ hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
-      <yloc>304</yloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -854,8 +854,8 @@ hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>208</yloc>
+      <xloc>336</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

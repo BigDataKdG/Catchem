@@ -1,4 +1,0 @@
-CREATE TABLE country(
-country_name NVARCHAR(255), 
-sc NVARCHAR(255),
-lc NVARCHAR(255) PRIMARY KEY);

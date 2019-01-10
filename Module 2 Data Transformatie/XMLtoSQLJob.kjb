@@ -356,7 +356,7 @@
       <type>TRANS</type>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>${Internal.Entry.Current.Directory}/xsl_transformation.ktr</filename>
+      <filename>${LOCAL_FILE_STRUCTURE}\Module 2 Data Transformatie/xsl_transformation.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -383,7 +383,7 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>368</xloc>
+      <xloc>400</xloc>
       <yloc>240</yloc>
     </entry>
     <entry>
@@ -393,13 +393,13 @@
       <sql/>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>T</sqlfromfile>
-      <sqlfilename>${LOCAL_FILE_STRUCTURE}countriesAndCities.sql</sqlfilename>
+      <sqlfilename>${LOCAL_FILE_STRUCTURE}\countriesAndCities.sql</sqlfilename>
       <sendOneStatement>F</sendOneStatement>
       <connection>catchem</connection>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>768</xloc>
+      <xloc>608</xloc>
       <yloc>240</yloc>
     </entry>
     <entry>
@@ -422,23 +422,6 @@
       <xloc>224</xloc>
       <yloc>240</yloc>
     </entry>
-    <entry>
-      <name>Truncate tables</name>
-      <description/>
-      <type>SQL</type>
-      <sql>TRUNCATE TABLE dbo.city;
-TRUNCATE TABLE dbo.country</sql>
-      <useVariableSubstitution>F</useVariableSubstitution>
-      <sqlfromfile>F</sqlfromfile>
-      <sqlfilename>${SQL_FILE_LOCATION}countriesAndCities.sql</sqlfilename>
-      <sendOneStatement>F</sendOneStatement>
-      <connection>catchem</connection>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>1</nr>
-      <xloc>560</xloc>
-      <yloc>240</yloc>
-    </entry>
   </entries>
   <hops>
     <hop>
@@ -452,17 +435,8 @@ TRUNCATE TABLE dbo.country</sql>
     </hop>
     <hop>
       <from>Transformation</from>
-      <to>Truncate tables</to>
-      <from_nr>0</from_nr>
-      <to_nr>1</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Truncate tables</from>
       <to>Insert countries and cities</to>
-      <from_nr>1</from_nr>
+      <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>

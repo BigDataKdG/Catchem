@@ -12,6 +12,7 @@ library(car)
 signif(X,4)
 options(scipen = 999)
 
+setwd("C:/Users/overvelj/Dropbox/Data Analyse/2017-2018/7 forecasting (Kris)/oefeningen")
 
 #Les 1.1: kansen
 {
