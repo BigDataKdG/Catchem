@@ -62,11 +62,18 @@ dbinom(x,n,p)
 #n= aantal keer herhaling
 #p= de kans 
 
+<<<<<<< HEAD
 # voor ranges (check this again)
 pbinom(x,n,p)#minder dan
 pbinom(20,100,2/5)
 1-pbinom(x,n,p) #meer dan
 1-pbinom(2,6,0.4) #meer dan 2 = 2 invullen, niet 3!
+=======
+# voor ranges 
+pbinom(x,n,p) #minder dan
+1- pbinom(x,n,p) #meer dan
+
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 
 #gemiddelde aantal gebeurtenis, gegeven kans
 # mu = n*p
@@ -75,6 +82,7 @@ pbinom(20,100,2/5)
 # hoevaak zal iets gebeuren, gegeven een gemiddelde kans/tijd
 
 dpois(x,mu)
+<<<<<<< HEAD
 dpois(55,8)
 #x = antal keren dat het voorkomt
 #mu = aantal keren het gemiddeld voorkomt
@@ -83,6 +91,14 @@ dpois(55,8)
 ppois(x,mu) #minder dan
 1-ppois(x,mu) # meer dan
 1-ppois(2,3.5)
+=======
+#x = antal keren dat het voorkomt
+#mu = aantal keren het gemiddeld voorkomt
+
+#voor ranges 
+1-ppois(x,mu)
+ppois(x,mu)
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 
 
 #formules
@@ -111,6 +127,7 @@ qnorm(0.95,mean=100, sd=18 ) #meer dan 1-kans!
 }
 
 #Les 2 toetsen
+
 {
 data <- read.csv(file="haarkleurbrussel.csv")
 data
@@ -221,9 +238,15 @@ z.test1(r,-0.545,0.008)
 #m = mean
 # n= sample
 # b = betrouwbaarheid
+<<<<<<< HEAD
 # s = standaar afwijking
 m <- 107.3
 b <- 0.95
+=======
+# s = standaard afwijking
+m <- 11.9
+b <- 0.99
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 a <- 0.01
 n <- 16
 f <- qt((1+b)/2, n-1)#qt(1-a/2, n-1)
@@ -242,6 +265,7 @@ t1 = (mo-m) / (s/sqrt(n)) #t = (mo-m) / s *sqrt(n)
 p <- pt(-abs(t), n-1) *2
 p
 
+<<<<<<< HEAD
 #kritische grens (waarde tot waar het gemiddelde kan gaan voor het verworpen kan worden)
 c <- qt(0.95,15) #vinden van kritieke waarde (alles wat boven/onder ligt )
 c
@@ -255,6 +279,9 @@ t.test(r, alternative="two.sided", mu=100, conf.level=0.95)
 
 
 #↔t-test eenzijdig
+=======
+#???t-test eenzijdig
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 n <- 5
 m <- -0.545
 mo <- -0.539
@@ -300,6 +327,22 @@ signif(qchisq(0.95, 10),4)
 }
 
 #Les 3: genetische Algoritmen
+
+##### INFO #####
+
+# GenSA (sim anealing) -> waarde minimaliseren, GA -> waarde optimaliseren
+# Bij GenSA moet je in de return dus (altijd??) een - teken zetten om de laagste waarde te returnen
+
+# TYPE GA kiezen (uit docs):
+# the type of genetic algorithm to be run depending on the nature of decision variables. Possible values are:
+  
+#  "binary" for binary representations of decision variables.
+
+# "real-valued" for optimization problems where the decision variables are floating-point representations of real numbers.
+
+# "permutation" for problems that involves reordering of a list of objects.
+################
+
 {
 ##### INFO #####
 
@@ -326,9 +369,15 @@ library("GenSA") #simulated annealing
 data <- read.csv(file="Knapsack Items.csv", sep=";")
 
 # Define data 
+<<<<<<< HEAD
 p <- data$gewichten.gr. # Profits 
 w <- data$waarde # Weights 
 v <- 750 # Knapsack ’s capacity 
+=======
+p <- data$waarde # Profits 
+w <- data$gewichten # Weights 
+W <- 750 # Knapsack ???s capacity 
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 n <- length(p) # Number of items
 
 # Define fitness function 
@@ -503,6 +552,7 @@ objective.function = function(x) {
   return(opp)
 }
 
+<<<<<<< HEAD
 # Run SGA
 SGA = ga(type="real-valued", 
          fitness=objective.function, # geef onze fitness functie mee
@@ -525,6 +575,18 @@ SGA = ga(type="real-valued",
 }
 
 #Les 4.1: discriminant analyse
+=======
+## monitor functie overgenomen uit les, maar werkt niet :/
+
+monitor.function = function(obj) {
+  curve(objective.function, 0, 100, main = paste("iteration = ", obj@iter), font.main = 1)
+  points(obj@population, obj@fitness, pch = 20, col = 2)
+  rug(obj@population, col = 2)
+}
+
+#Les 4: discriminant analyse
+
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
 {
 library("MASS")
 
@@ -1262,6 +1324,7 @@ install_keras()
    #lage threshold voor positief  = hoog kans op TRP + FPR(this needs to be close to 0)
    
 }
+<<<<<<< HEAD
 
 #
 {
@@ -1306,3 +1369,154 @@ sa = GenSA(par=b,
 
 sa$par
 }
+=======
+##################################
+#####                        #####
+##### LES 6 OPLOSSINGEN JENS #####
+#####                        #####
+##################################
+
+## VRAAG 1
+
+confusion.matrix = matrix(c(50, 10, 5, 100),nrow = 2, ncol = 2)
+rownames(confusion.matrix) = c('Predicted NO', 'Predicted YES')
+colnames(confusion.matrix) = c('Actual NO', 'Actual YES')
+confusion.matrix
+accuracy = function(cm, total = F) {
+  sum(diag(cm)) / sum(rowSums(cm))
+}
+accuracy(confusion.matrix)
+
+# precision = tp/(tp+fp)
+precision = function(cm, total = F) {
+  ps = diag(cm)/rowSums(cm)
+  if (total == T) {
+    return(weighted.mean(ps, rowSums(cm)))
+  }
+  return(ps)
+}
+
+precision(confusion.matrix)
+
+# recall = tp / (tp + fn)
+recall = function(cm, total = F) {
+  rc = diag(cm)/colSums(cm)
+  if (total == T) {
+    return(weighted.mean(rc, colSums(cm)))
+  }
+  return (rc)
+}
+
+recall(confusion.matrix)
+
+# f-measure
+f_measure = function(cm, beta = 1, total = F) {
+  (beta^2 + 1) * precision(cm) * recall(cm)/((beta^2) * precision(cm) + recall(cm))
+}
+
+f_measure(confusion.matrix, beta = 1)
+
+# TPR = recall
+# FPR = fp / (fp/tn)
+fpr = function(cm) {
+  diag(cm[nrow(cm):1, ]) / colSums(cm)
+}
+
+fpr(confusion.matrix)
+
+
+## VRAAG 2
+
+confusion.matrix = matrix(c(100, 0, 50, 5),nrow = 2, ncol = 2)
+
+rownames(confusion.matrix) = c('Predicted A', 'Predicted B')
+colnames(confusion.matrix) = c('Actual A', 'Actual B')
+
+accuracy(confusion.matrix)
+precision(confusion.matrix)
+recall(confusion.matrix)
+f_measure(confusion.matrix)
+
+# c) precision voor A ligt vrij laag, recall en f1 heel laag voor B
+
+## VRAAG 3
+
+confusion.matrix = matrix(c(2385, 0, 0, 0, 12, 4, 332, 1, 0, 0, 0, 0, 908, 0, 0, 1, 0, 8, 1084, 6, 4, 1, 0, 9, 2053),nrow = 5, ncol = 5)
+
+rownames(confusion.matrix) = c('Predicted Asfalt', 'Predicted Beton', 'Predicted Gras', 'Predicted Boom', 'Predicted Gebouw')
+colnames(confusion.matrix) = c('Actual Asfalt', 'Actual Asfalt', 'Actual Gras', 'Actual Boom', 'Actual Gebouw')
+
+precision(confusion.matrix)
+recall(confusion.matrix)
+f_measure(confusion.matrix)
+
+
+## VRAAG 4
+
+library(pROC)
+setwd('/Users/JeBo/Documents/KdG/data-science2/6 Neurale Netwerken/datasets')
+simpsons = read.csv('simpsons_orig.csv', sep=';')
+
+x_train = normalize(as.matrix(simpsons[,3:5]))
+y_train = as.matrix(ifelse(simpsons$Geslacht == 'M', 0, 1))
+model = keras_model_sequential()
+model %>% 
+  layer_dense(units=64, activation = 'relu', input_shape = c(3)) %>% 
+  layer_dense(units = 32, activation = 'relu') %>% 
+  layer_dense(units=16, activation = 'relu') %>%
+  layer_dense(units=1, activation = 'sigmoid')
+
+model %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_nadam(),
+  metrics = c('accuracy')
+)
+
+history = model %>% fit(
+  x_train, y_train,
+  epochs = 1000, batch_size = 5,
+  # validation_split = 0.2,
+  verbose = 1
+)
+
+pred1 = model %>% predict(x_train)
+pred1.class = model %>% predict_classes(x_train)
+cbind(pred1,pred1.class)
+
+ROC = roc(as.vector(y_train),as.vector(pred1)) 
+#ROC2 = roc(as.vector(y_train),as.vector(pred2))
+
+plot.roc(ROC, print.thres = T, print.auc = T, col="blue")
+# plot.roc(ROC2, add=T, print.thres = T, print.auc = T, col="blue")
+
+predictWithCustomThreshold = function(pred, threshold) {
+  ifelse(pred > threshold, 1, 0)
+}
+predictWithCustomThreshold(pred1, 0.46)
+
+## VRAAG 5
+
+data("infert")
+require(MASS)
+require(pROC)
+
+infert.lda = infert
+infert.lda = infert.lda[!infert.lda$education == '0-5yrs',]
+
+infert.lda$education = droplevels(infert.lda$education)
+
+model1 = lda(education ~ ., data=infert.lda)
+model2 = lda(education ~ age + parity, data=infert.lda)
+
+responses = as.numeric(infert.lda$education)
+
+pred1 = as.vector(predict(model1)$x)
+pred2 = as.vector(predict(model2)$x)
+ROC1 = roc(responses, pred1)
+ROC2 = roc(responses, pred2)
+
+plot.roc(ROC1, print.thres = T, print.auc = T, col="red")
+plot.roc(ROC2, add = T, print.thres = T, print.auc = T, col="blue", print.auc.y = 0.2)
+
+
+>>>>>>> d397cb781259a90f5b51d8f249a10a408d8d1ad9
