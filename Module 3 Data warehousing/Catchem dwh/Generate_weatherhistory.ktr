@@ -633,8 +633,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>323</xloc>
-      <yloc>145</yloc>
+      <xloc>288</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -684,7 +684,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>512</xloc>
+      <xloc>496</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
@@ -705,7 +705,7 @@
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>weather_hist</table>
+      <table>weather_history</table>
       <key>
         <name>city_id</name>
         <field>city_id</field>
@@ -715,11 +715,6 @@
       <value>
         <name>city_id</name>
         <rename>city_id</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>name</name>
-        <rename>city_name</rename>
         <update>Y</update>
       </value>
       <value>
@@ -736,6 +731,11 @@
         <name>weather_id</name>
         <rename>updatedWeather_id</rename>
         <update>Y</update>
+      </value>
+      <value>
+        <name>name</name>
+        <rename>city_name</rename>
+        <update>N</update>
       </value>
     </lookup>
     <cluster_schema/>
@@ -768,7 +768,7 @@
     <cache_size>0</cache_size>
     <lookup>
       <schema>dbo</schema>
-      <table>dim_rain</table>
+      <table>dimension_rain</table>
       <orderby/>
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>N</eat_row_on_failure>

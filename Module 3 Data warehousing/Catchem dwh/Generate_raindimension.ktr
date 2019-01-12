@@ -437,7 +437,7 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem_dwh</name>
+    <name>${DB_NAME_DWH}</name>
     <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
@@ -562,8 +562,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>192</xloc>
-      <yloc>224</yloc>
+      <xloc>144</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -578,12 +578,12 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem_dwh</connection>
+    <connection>${DB_NAME_DWH}</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema/>
-      <table>dim_rain</table>
+      <schema>dbo</schema>
+      <table>dimension_rain</table>
       <key>
         <name>id</name>
         <field>id</field>
@@ -615,8 +615,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>400</xloc>
-      <yloc>224</yloc>
+      <xloc>320</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
