@@ -1,0 +1,7 @@
+"C:\Program Files\MongoDB\Server\4.0\bin\mongoimport.exe" --db catchem --collection catchemAll --file "C:\Users\jens_\Downloads\Documents\Catchem\Module 4 NO sql\Catchem.json" --port 27023 --type json
+
+
+// Onderstaande uitvoeren in mongoS om index aan te maken en de collectie te sharden op basis van de key 
+use catchem
+db.catchemAll.createIndex( { quest_id: 1 } )
+sh.shardCollection("catchem.catchemAll", {"quest_id": 1})
