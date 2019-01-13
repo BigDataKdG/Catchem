@@ -436,14 +436,14 @@
   <notepads>
   </notepads>
   <connection>
-    <name>catchem</name>
-    <server>127.0.0.1</server>
+    <name>${DB_NAME_DWH}</name>
+    <server>localhost</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>catchem</database>
+    <database>${DB_NAME_DWH}</database>
     <port>1433</port>
-    <username>sa</username>
-    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
+    <username>${DB_USERNAME}</username>
+    <password>${DB_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -451,10 +451,6 @@
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
         <attribute>SQLSERVER2017</attribute>
-      </attribute>
-      <attribute>
-        <code>EXTRA_OPTION_MSSQLNATIVE.stringtype</code>
-        <attribute>unspecified</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -503,14 +499,14 @@
     </attributes>
   </connection>
   <connection>
-    <name>Dwh Catchem</name>
+    <name>catchem</name>
     <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>Dwh Catchem</database>
+    <database>catchem</database>
     <port>1433</port>
-    <username>DB4</username>
-    <password>Encrypted 2be98afc86aa7f2e4cb79ce10beb68d8e</password>
+    <username>sa</username>
+    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -518,6 +514,10 @@
       <attribute>
         <code>EXTRA_OPTION_MSSQLNATIVE.instance</code>
         <attribute>SQLSERVER2017</attribute>
+      </attribute>
+      <attribute>
+        <code>EXTRA_OPTION_MSSQLNATIVE.stringtype</code>
+        <attribute>unspecified</attribute>
       </attribute>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -603,9 +603,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <schema/>
-    <table>user_dim</table>
-    <connection>Dwh Catchem</connection>
+    <schema>dbo</schema>
+    <table>dimension_user</table>
+    <connection>${DB_NAME_DWH}</connection>
     <commit>100</commit>
     <update>Y</update>
     <fields>

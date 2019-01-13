@@ -139,3 +139,85 @@ HAVING COUNT(ts.stages_id) > 4;
 
 SELECT *
 FROM dbo.treasure AS t JOIN dbo.treasure_stages AS ts ON (t.id = ts.treasure_id);
+
+
+
+-- Partition treasure_log
+
+USE [catchem]
+GO
+BEGIN TRANSACTION
+CREATE PARTITION FUNCTION [partition_fun_treasure_log](datetime2(7)) AS RANGE LEFT FOR VALUES (N'2015-09-11T00:00:00', N'2016-03-11T00:00:00', N'2016-09-11T00:00:00', N'2017-03-11T00:00:00', N'2017-09-11T00:00:00', N'2018-03-11T00:00:00', N'2018-09-11T00:00:00', N'2019-03-11T00:00:00')
+
+
+CREATE PARTITION SCHEME [partition_schemeµ_treasure_log] AS PARTITION [partition_fun_treasure_log] TO ([PARTITION1], [PARTITION2], [PARTITION3], [PARTITION4], [PARTITION5], [PARTITION6], [PARTITION7], [PARTITION8], [PARTITION9])
+
+ALTER TABLE [dbo].[treasure_log] DROP CONSTRAINT [PK_treasure_log] WITH ( ONLINE = OFF )
+
+SET ANSI_PADDING ON
+
+ALTER TABLE [dbo].[treasure_log] ADD  CONSTRAINT [PK_treasure_log] PRIMARY KEY NONCLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+
+CREATE CLUSTERED INDEX [ClusteredIndex_on_partition_schemeµ_treasure_log_636829971159361197] ON [dbo].[treasure_log]
+(
+	[log_time]
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [partition_schemeµ_treasure_log]([log_time])
+
+
+DROP INDEX [ClusteredIndex_on_partition_schemeµ_treasure_log_636829971159361197] ON [dbo].[treasure_log]
+
+
+COMMIT TRANSACTION
+
+-- COMPRESSIE
+
+SELECT DISTINCT
+    s.name,
+    t.name,
+    i.name,
+    i.type,
+    i.index_id,
+    p.partition_number,
+    p.rows
+FROM sys.tables t
+LEFT JOIN sys.indexes i
+ON t.object_id = i.object_id
+JOIN sys.schemas s
+ON t.schema_id = s.schema_id
+LEFT JOIN sys.partitions p
+ON i.index_id = p.index_id
+    AND t.object_id = p.object_id
+WHERE t.type = 'U' 
+  AND p.data_compression_desc = 'NONE'
+ORDER BY p.rows desc
+ 
+ -- check de winst van row compression en page compression voor bepaalde tabel (hieronder treasure_log)
+
+ EXEC sp_estimate_data_compression_savings 
+    @schema_name = 'dbo', 
+    @object_name = 'treasure_log', 
+    @index_id = NULL, 
+    @partition_number = NULL, 
+    @data_compression = 'ROW'
+ 
+EXEC sp_estimate_data_compression_savings 
+    @schema_name = 'dbo', 
+    @object_name = 'treasure_log', 
+    @index_id = NULL, 
+    @partition_number = NULL, 
+    @data_compression = 'PAGE'
+
+-- check hoeveel ruimte nog vrij is voor bepaalde files
+
+	SELECT name,
+    s.used / 128.0                  AS SpaceUsedInMB,
+    size / 128.0 - s.used / 128.0   AS AvailableSpaceInMB
+FROM sys.database_files
+CROSS APPLY 
+    (SELECT CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)) 
+s(used)
+WHERE FILEPROPERTY(name, 'SpaceUsed') IS NOT NULL;
