@@ -631,6 +631,53 @@
     </GUI>
   </step>
   <step>
+    <name>Database lookup 2</name>
+    <type>DBLookup</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>${DB_NAME_DWH}</connection>
+    <cache>N</cache>
+    <cache_load_all>N</cache_load_all>
+    <cache_size>0</cache_size>
+    <lookup>
+      <schema/>
+      <table>weather_hist</table>
+      <orderby/>
+      <fail_on_multiple>N</fail_on_multiple>
+      <eat_row_on_failure>N</eat_row_on_failure>
+      <key>
+        <name>city_id</name>
+        <field>city_id</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>weather_id</name>
+        <rename>weather_id</rename>
+        <default/>
+        <type>String</type>
+      </value>
+    </lookup>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Dimension lookup/update</name>
     <type>DimensionLookup</type>
     <description/>
@@ -769,7 +816,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>624</xloc>
+      <xloc>656</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -809,53 +856,6 @@ hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time
     <GUI>
       <xloc>96</xloc>
       <yloc>288</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Database lookup 2</name>
-    <type>DBLookup</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>${DB_NAME_DWH}</connection>
-    <cache>N</cache>
-    <cache_load_all>N</cache_load_all>
-    <cache_size>0</cache_size>
-    <lookup>
-      <schema/>
-      <table>weather_hist</table>
-      <orderby/>
-      <fail_on_multiple>N</fail_on_multiple>
-      <eat_row_on_failure>N</eat_row_on_failure>
-      <key>
-        <name>city_id</name>
-        <field>city_id</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>weather_id</name>
-        <rename>weather_id</rename>
-        <default/>
-        <type>String</type>
-      </value>
-    </lookup>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

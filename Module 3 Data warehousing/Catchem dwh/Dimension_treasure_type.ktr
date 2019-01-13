@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Dimension_treasureType</name>
+    <name>Dimension_treasure_type</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -614,8 +615,8 @@ GROUP BY treasure_id, terrain, difficulty;</sql>
       <schema_name/>
     </partitioning>
     <connection>${DB_NAME_DWH}</connection>
-    <schema>dbo</schema>
-    <table>treasure_found</table>
+    <schema/>
+    <table>dimension_treasure</table>
     <commit>1000</commit>
     <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>

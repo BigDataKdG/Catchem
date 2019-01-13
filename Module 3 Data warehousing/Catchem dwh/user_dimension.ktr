@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>user_dimension</name>
+    <name>Dimension_user</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -599,7 +600,7 @@
       <schema_name/>
     </partitioning>
     <schema/>
-    <table>user_dim</table>
+    <table>user_dimension</table>
     <connection>Dwh Catchem</connection>
     <commit>100</commit>
     <update>Y</update>
@@ -609,7 +610,7 @@
         <lookup>u_id</lookup>
       </key>
       <date>
-        <name>log_time</name>
+        <name/>
         <from>date_from</from>
         <to>date_to</to>
       </date>
@@ -672,7 +673,7 @@
     <cache_size>5000</cache_size>
     <preload_cache>N</preload_cache>
     <use_start_date_alternative>N</use_start_date_alternative>
-    <start_date_alternative>none</start_date_alternative>
+    <start_date_alternative>column_value</start_date_alternative>
     <start_date_field_name>log_time</start_date_field_name>
     <useBatch>N</useBatch>
     <cluster_schema/>
@@ -683,7 +684,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>544</xloc>
+      <xloc>640</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -726,7 +727,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>432</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -776,10 +777,10 @@
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
+    <sql>select top(10) CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, CONVERT(varchar(255), city_city_id, 2) city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found, t.log_time
 FROM dbo.user_table u
 LEFT JOIN dbo.treasure_log t ON u.id = t.hunter_id
-GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id
+GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id, t.log_time
 order by 1 asc;</sql>
     <limit>0</limit>
     <lookup/>

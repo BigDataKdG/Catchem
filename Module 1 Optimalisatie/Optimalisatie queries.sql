@@ -1,91 +1,49 @@
+-- Optimalisatie 
 
 SET STATISTICS TIME ON;
 SET STATISTICS IO ON;
-
--- dbo.stage
-	-- Getting the description of the stages belonging to a certain treasure
-SELECT container_size, description, type, visibility
-FROM dbo.stage 
-WHERE id IN (SELECT stages_id
-						FROM dbo.treasure_stages
-						WHERE treasure_id =0x8000564D9C1F4A43A1C04E587093CFEC) and visibility = 1;
-
-	-- to get quickly get the owner_id when asking the number of treasures tied to a treasure owner.
-CREATE CLUSTERED INDEX clustered_index_treasure_stages   
-    ON dbo.treasure_stages (treasure_id);
 	
 -- dbo.treasure
-	-- Getting the number of treasures belonging to a certain owner_id
-SELECT min(first_name) AS Voornaam, min(last_name) AS Achternaam, count(*) AS Aantal_treasures, min(dbo.user_table.id) AS User_id 
-FROM dbo.treasure JOIN dbo.user_table ON (owner_id = dbo.user_table.id) GROUP BY dbo.user_table.id;
+-- (1) Query om het aantal treasures te zoeken horende bij 
+select u.id, first_name, last_name, count(*) AS 'number of treasures'
+From dbo.treasure
+JOIN user_table u on (owner_id = u.id)
+WHERE owner_id = 0x00012C54F065486CBF560329F2F0EB99
+GROUP BY first_name, last_name, u.id; 
 
-	-- verbeterede query
-select first_name, last_name, count(*) AS 'number of treasures'
-FROM dbo.user_table
-JOIN dbo.treasure on (owner_id = dbo.user_table.id)
-WHERE dbo.user_table.id IN (select owner_id
-							FROM dbo.treasure
-							WHERE id = 0x2741BFD7078F457A972505320E8CD0CD)
-GROUP BY first_name, last_name; 
+	-- (1) non-clustered index op owner_id
 
-	-- Getting the owner_id more efficiently
 CREATE NONCLUSTERED INDEX nclustered_owner_id   
     ON dbo.treasure (owner_id); 
-
+GO
 	--Option 2: create index view 
-SET NUMERIC_ROUNDABORT OFF;  
-SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT,  
-    QUOTED_IDENTIFIER, ANSI_NULLS ON;  
+DROP VIEW  number_treasure; 
+GO
 
-CREATE VIEW number_treasure
-WITH SCHEMABINDING  
-AS  
-	SELECT dbo.user_table.id, first_name, last_name, COUNT_BIG(*) number
+CREATE VIEW number_treasure 
+WITH SCHEMABINDING AS  
+	SELECT owner_id, first_name, last_name, COUNT_BIG(*) number
 	FROM dbo.treasure JOIN dbo.user_table ON (owner_id = dbo.user_table.id) 
-	GROUP BY dbo.user_table.id, first_name, last_name;
+	GROUP BY owner_id, first_name, last_name;
+GO
 
 CREATE UNIQUE CLUSTERED INDEX clustered_index_view 
-    ON number_treasure (id);
+    ON number_treasure (owner_id);
+GO
 
-	-- Better query for option 2?
-select first_name, last_name, number
-FROM number_treasure
-WHERE id IN (select owner_id
-			FROM dbo.treasure
-			WHERE id = 0x2741BFD7078F457A972505320E8CD0CD); 
+-- resulterende query te gebruiken om het aantal treasures te zoeken
+SELECT *
+FROM number_treasure 
+WHERE owner_id = 0x00012C54F065486CBF560329F2F0EB99;
 
-	-- Getting treasures based on location, difficulty, relief and number of stages
+-- (2) query om teasures te zoeken op basis van location, difficulty, relief en number of stages
 
-SELECT id, difficulty
-FROM dbo.treasure
-WHERE city_city_id = 0x1992A52F3BEC4181A1A165B12B28C8FD
-and difficulty = 3;
- 
-SELECT id, terrain
-FROM dbo.treasure
-WHERE city_city_id = 0x1992A52F3BEC4181A1A165B12B28C8FD
-and terrain = 1;
- 
-SELECT treasure_id, count(*)
-FROM dbo.treasure_stages
-JOIN dbo.treasure ON (id = treasure_id)
-WHERE city_city_id =0x1992A52F3BEC4181A1A165B12B28C8FD
-GROUP BY treasure_id
-HAVING count(*) = 1;
-
-SELECT treasure_id, terrain, difficulty, count(*) 'number of stages'
+SELECT treasure_id, terrain, difficulty, city_city_id, count(*) 'number of stages'
 FROM dbo.treasure_stages
 JOIN dbo.treasure ON (id = treasure_id)
 WHERE city_city_id =0x1992A52F3BEC4181A1A165B12B28C8FD and difficulty = 1 and terrain = 3
-GROUP BY treasure_id, terrain, difficulty
+GROUP BY treasure_id, terrain, difficulty,city_city_id
 HAVING count(*) > 4;
-
-SELECT t.id
-FROM dbo.treasure AS t JOIN dbo.treasure_stages AS ts ON (t.id = ts.treasure_id)
-WHERE city_city_id = 0x1992A52F3BEC4181A1A165B12B28C8FD
-AND t.difficulty = 1 AND t.terrain = 3
-GROUP BY t.id
-HAVING COUNT(ts.stages_id) > 4;
 
 	-- non-clustered index on city_city_id 
 
@@ -96,30 +54,34 @@ CREATE NONCLUSTERED INDEX nclustered_city_city_id
 CREATE NONCLUSTERED INDEX nclustered_city_city_id_incl  
     ON dbo.treasure (city_city_id)
 	INCLUDE (terrain, difficulty); 
-	
+
+DROP INDEX nclustered_city_city_id  
+GO
 	--index view for the number of stages
 	--Option 2: create index view
-	 
-SET NUMERIC_ROUNDABORT OFF;  
-SET ANSI_PADDING, ANSI_WARNINGS, CONCAT_NULL_YIELDS_NULL, ARITHABORT,  
-    QUOTED_IDENTIFIER, ANSI_NULLS ON;  
 
 CREATE VIEW number_stages
 WITH SCHEMABINDING  
 AS  
-		SELECT treasure_id, difficulty, terrain, city_city_id, count_BIG(*) 'number of stages'
+		SELECT city_city_id, treasure_id,  terrain,difficulty, count_BIG(*) 'number_of_stages'
 		FROM dbo.treasure_stages
 		JOIN dbo.treasure ON (id = treasure_id)
 		GROUP BY treasure_id, difficulty, terrain, city_city_id;
-
+GO
 CREATE UNIQUE CLUSTERED INDEX clustered_index_view_stages 
     ON number_stages (treasure_id);
 
-CREATE NONCLUSTERED INDEX nclustered_city_id_incl  
-    ON dbo.number_stages (city_city_id)
-	INCLUDE (terrain, difficulty, "number of stages"); 
+CREATE NONCLUSTERED INDEX nclustered_city_city_id_incl_vw 
+    ON number_stages (city_city_id)
+	INCLUDE (terrain, difficulty, number_of_stages); 
 
--- effect on write/operations
+-- resulterende query om teasures te zoeken op basis van location, difficulty, relief en number of stages
+SELECT *
+FROM number_stages
+WHERE city_city_id =0x1992A52F3BEC4181A1A165B12B28C8FD and difficulty = 1 and terrain = 3
+AND number_of_stages > 4; 
+
+-- effect on write/operations (nog even te testen)!
 DECLARE @temptreasure TABLE (treasure_id binary(16))
 DECLARE @tempstage TABLE (stages_id binary(16))
 DECLARE @temp TABLE (treasure_id binary(16), stages_id binary(16))
@@ -143,6 +105,22 @@ DECLARE @temp TABLE (treasure_id binary(16), stages_id binary(16))
 	
 	select *
 	FROM @temp  ;
+
+-- dbo.stage/dbo.treasure_stages
+-- Getting the description of the stages belonging to a certain treasure
+
+SELECT container_size, description, type, visibility
+FROM dbo.stage 
+WHERE id IN (SELECT stages_id
+						FROM dbo.treasure_stages
+						WHERE treasure_id =0x8000564D9C1F4A43A1C04E587093CFEC) and visibility = 1;
+
+-- index op de treasure ID van treasure_stages
+CREATE CLUSTERED INDEX clustered_index_treasure_stages   
+    ON dbo.treasure_stages (treasure_id);
+
+	select *
+	FROM dbo.stage;
 
 -- dbo.treasure_log
 
@@ -230,21 +208,3 @@ select *
 FROM dbo.user_table; 
 
 --- Partioning 
-  select *
-  FROM dbo.User_table
-  ORDER BY logs_found;
-
-
-  select u.id, count(*) treasures
-  FROM dbo.user_table u
-  LEFT JOIN dbo.treasure t ON u.id =t.owner_id
-  GROUP BY u.id; 
-
-
-  select id
-  FROM dbo.user_table;
-
-
-  select owner_id, count(*) t_owned
-  FROM dbo.treasure
-  GROUP BY owner_id;
