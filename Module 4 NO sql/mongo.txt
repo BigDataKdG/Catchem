@@ -1,0 +1,61 @@
+rmdir /Q /S "C:\data\shard1"
+rmdir /Q /S "C:\data\shard2"
+rmdir /Q /S "C:\data\configServer"
+
+mkdir "C:\data\shard1"
+mkdir "C:\data\shard2"
+mkdir "C:\data\configServer"
+
+cd "C:\Program Files\MongoDB\Server\4.0\bin"
+
+start cmd /k mongod --replSet shard1 --dbpath "C:\data\shard1" --port 27100 --shardsvr
+
+// connecteer naar eerste shard (nieuwe connectie op localhost:27100) en voer onderstaande uit
+
+rs.initiate({_id : "shard1",
+				version: 1,
+					members: [ {_id : 0, "host" : "localhost:27100"} ] })
+                
+
+start cmd /k mongod --replSet shard2 --dbpath "C:\data\shard2" --port 27101 --shardsvr
+
+// connecteer naar tweede shard (nieuwe connectie op localhost:27101) en voer onderstaande uit
+
+rs.initiate({_id : "shard2",
+				version: 1,
+					members: [ {_id : 0, "host" : "localhost:27101"} ] })
+                    
+            
+start cmd /k mongod --replSet configServer  --dbpath "C:\data\configServer" --port 27102 --configsvr
+
+// connecteer naar config server (nieuwe connectie op localhost:27102) en voer onderstaande uit
+
+rs.initiate({_id : "configServer",
+				version: 1,
+					configsvr: true,
+					members: [ {_id : 0, "host" : "localhost:27103"} ] 
+					})
+                    
+// start uiteindelijke de router op en leg hier een connectie naar (vanaf hier gebeuren alle uitvoeringen op de router)
+start cmd /k mongos --configdb "configServer/localhost:27102" --port 27103
+
+sh.addShard("shard1/localhost:27100")
+sh.addShard("shard2/localhost:27101")
+// catchem database bestaat eigenlijk nog niet, maar we kunnen al wel commando's uitvoeren hierop
+sh.enableSharding("catchem")
+
+// use config wil zeggen dat de volgende db commandos op de config databank worden uitgevoerd
+use config
+
+// chunksize geeft aan hoe groot de chunks mogen worden. Omdat we het splitting mechanisme en chunk migration willen testen zetten we die hier op 1. Anders duurt het heel lang voor het splitten start.
+db.settings.save( { _id:"chunksize", value: 1 } )
+
+// index plaatsen op de key op basis waarvan we gaan sharden (noodzakelijk!). We kunnen al een index leggen op een collection die nog niet bestaat!
+use catchem
+db.catchemAll.ensureIndex( { quest_id: 1 } )
+sh.shardCollection("catchem.catchemAll", {"quest_id": 1})
+
+// voer import statement uit (pas file aan naar waar Catchem.json staat)
+"C:\Program Files\MongoDB\Server\4.0\bin\mongoimport.exe" --db catchem --collection catchemAll --file "C:\Users\jens_\Downloads\Documents\Catchem\Module 4 NO sql\Catchem.json" --port 27023 --type json
+
+// run queries uit mongo_queries.js 

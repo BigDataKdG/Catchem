@@ -1,5 +1,9 @@
-use catchem
-db.catchemAll.createIndex( { quest_id: 1 } )
+sh.addShard("shard1/localhost:27100")
+sh.addShard("shard2/localhost:27100")
+
+
+use config
+db.catchemAll.ensureIndex( { quest_id: 1 } )
 sh.shardCollection("catchem.catchemAll", {"quest_id": 1})
 
 //	Geef een overzicht van alle metingen gerangschikt per treasure en daarbinnen per quest.
@@ -41,5 +45,4 @@ db.catchemAll.find(
        }
    }
 )
-
 
