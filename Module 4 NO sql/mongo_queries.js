@@ -1,3 +1,7 @@
+use catchem
+db.catchemAll.createIndex( { quest_id: 1 } )
+sh.shardCollection("catchem.catchemAll", {"quest_id": 1})
+
 //	Geef een overzicht van alle metingen gerangschikt per treasure en daarbinnen per quest.
 
 db.catchemAll.find({}).sort({stage_id: 1}).sort({quest_id: 1})
@@ -15,27 +19,27 @@ db.catchemAll.aggregate([
 
 // eerst lat en long omzetten naar 1 field omdat 2d niet werkt met lat en long als aparte fields
 db.catchemAll.find().forEach(function (e) {
-    e.geo = {
-	type: "Point",
-        coordinates: [e.long, e.lat] // Longitude goes first, Latitude range: [-90..90]
-    };
+    e.location = {
+    coordinates: [e.long, e.lat],
+    type: "Point"
+    } 
+    ;
     db.catchemAll.save(e);
 });
 
-// db.catchemAll.update({}, {$unset: {lat:1, long:1}}, false, true)
+//db.catchemAll.update({}, {$unset: {location:1}}, false, true)
 
-db.catchemAll.createIndex( { geo : "2dsphere" } )
+db.catchemAll.createIndex( { location : "2dsphere" })
 
 db.catchemAll.find(
 {
-     geo:
-       { $near :
-          {
-            $geo: { type: "Point",  coordinates: [  112.35518, 28.55386 ] },
-            $minDistance: 0,
+     location:{ 
+         $near : {
+            $geometry: { index: "Point",  coordinates: [  112.35518, 28.55386 ] },
             $maxDistance: 100000
           }
        }
    }
 )
+
 
