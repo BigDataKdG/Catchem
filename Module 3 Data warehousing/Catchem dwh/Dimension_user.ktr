@@ -781,7 +781,7 @@
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
+    <sql>select top(10) CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
 FROM dbo.user_table u
 LEFT JOIN dbo.treasure_log t ON u.id = t.hunter_id
 GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id
@@ -850,7 +850,7 @@ order by 1 asc;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>Dwh Catchem</connection>
+    <connection/>
     <schema/>
     <table>User_table22</table>
     <commit>1000</commit>

@@ -20,13 +20,6 @@ GO
 
 use catchem; 
 
--- Diagnostic results
-SELECT id
-FROM dbo.treasure_log;
-
-SELECT CONVERT(binary(16), id, 2)
-FROM dbo.treasure_log;
-
 -- Conversion
 -- For the conversion, we need to take into account the different PK and FK relationships
 
