@@ -644,16 +644,6 @@
         <update>Insert</update>
       </field>
       <field>
-        <name>logs_found</name>
-        <lookup>logs_found</lookup>
-        <update>Punch through</update>
-      </field>
-      <field>
-        <name>number_treasures</name>
-        <lookup>number_treasures</lookup>
-        <update>Punch through</update>
-      </field>
-      <field>
         <name>experience_level</name>
         <lookup>experience_level</lookup>
         <update>Insert</update>
@@ -781,7 +771,7 @@
       <schema_name/>
     </partitioning>
     <connection>catchem</connection>
-    <sql>select top(10) CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
+    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
 FROM dbo.user_table u
 LEFT JOIN dbo.treasure_log t ON u.id = t.hunter_id
 GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id

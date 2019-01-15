@@ -640,7 +640,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
+      <xloc>176</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -687,7 +687,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
+      <xloc>304</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
@@ -794,7 +794,7 @@
       </value>
       <value>
         <name>User_id</name>
-        <rename>u_id</rename>
+        <rename>hunter_id</rename>
         <update>N</update>
       </value>
       <value>
@@ -895,14 +895,11 @@ if (weather_id == null) {
       <schema_name/>
     </partitioning>
     <connection>${DB_NAME}</connection>
-    <sql>   SELECT TOP(2000) CONVERT(varchar(255), id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), tl.treasure_id, 2) treasure_id, CONVERT(varchar(255), 
-hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME(), 
-"city_id" = (SELECT city_city_id
-			FROM dbo.treasure t
-			JOIN dbo.treasure_log on t.id = treasure_id
-			WHERE t.id = CONVERT(varchar(255), tl.treasure_id, 2)) 
+    <sql>SELECT TOP(2000) CONVERT(varchar(255), tl.id, 2) id,FORMAT(log_time,'yyyyMMdd') AS log_date, log_time, CONVERT(varchar(255), tl.treasure_id, 2) treasure_id, CONVERT(varchar(255), 
+hunter_id, 2) hunter_id, 1 as meetwaarde, "duur" = ABS(DATEDIFF(minute, log_time, session_start)), "creation_date" = SYSDATETIME(), CONVERT(varchar(255), city_city_id, 2) city_id
 FROM dbo.treasure_log tl
-WHERE log_type =2; </sql>
+JOIN dbo.treasure t on CONVERT(varchar(255), t.id, 2) = CONVERT(varchar(255), tl.treasure_id, 2)
+WHERE log_type =2;</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -916,7 +913,7 @@ WHERE log_type =2; </sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>96</xloc>
+      <xloc>64</xloc>
       <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
