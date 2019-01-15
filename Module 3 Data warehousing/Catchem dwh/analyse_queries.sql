@@ -15,5 +15,15 @@ FROM dbo.treasure_found found2
 JOIN dbo.fact_treasure fact2 ON found2.treasure_id = fact2.Treasure_id
 WHERE terrain > 2 AND fact2.Weather_id = 999)
 
--- 
+-- Worden er in weekends meer moeilijkere caches gedaan? 
 
+SELECT "moeilijkere caches in weekend (gem per dag)" = 
+(SELECT COUNT(*)/2 FROM dbo.fact_treasure fact 
+JOIN dbo.treasure_found found ON fact.Treasure_id = found.treasure_id 
+JOIN dbo.dimension_day day ON day.DATE_SK = fact.Day_id
+WHERE day.weekend_ind = 'Y' AND found.difficulty > 2), 
+"moeilijkere caches in week (gem per dag)" = 
+(SELECT COUNT(*)/5 FROM dbo.fact_treasure fact 
+JOIN dbo.treasure_found found ON fact.Treasure_id = found.treasure_id 
+JOIN dbo.dimension_day day ON day.DATE_SK = fact.Day_id
+WHERE day.weekend_ind = 'N' AND found.difficulty > 2);
