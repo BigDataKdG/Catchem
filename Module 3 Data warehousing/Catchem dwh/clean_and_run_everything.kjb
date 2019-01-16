@@ -644,12 +644,17 @@ if not exists (select * from sysobjects where name='dimension_rain')
 if not exists (select * from sysobjects where name='weather_history')
     CREATE TABLE weather_history
 (
-  city_id VARCHAR(255)
-, description VARCHAR(31)
+  surrogate_key BIGINT PRIMARY KEY IDENTITY(0,1)
+, version INT
+, date_from DATETIME
+, date_to DATETIME
+, city_id VARCHAR(255)
 , "TIMESTAMP" DATETIME
-, weather_id BIGINT FOREIGN KEY REFERENCES dimension_rain(id)
+, weather_id BIGINT
+, description VARCHAR(31)
 , name VARCHAR(400)
-);
+)
+;
 
 
 
@@ -664,8 +669,8 @@ if not exists (select * from sysobjects where name='dimension_treasure')
 ;
 
 
-if not exists (select * from sysobjects where name='user_dimension')
-    CREATE TABLE user_dimension
+if not exists (select * from sysobjects where name='dimension_user')
+    CREATE TABLE dimension_user
 (
   Surrogate BIGINT PRIMARY KEY
 , version INT

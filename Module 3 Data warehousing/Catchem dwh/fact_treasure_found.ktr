@@ -662,7 +662,7 @@
     <cache_size>0</cache_size>
     <lookup>
       <schema/>
-      <table>weather_hist</table>
+      <table>weather_history</table>
       <orderby/>
       <fail_on_multiple>N</fail_on_multiple>
       <eat_row_on_failure>N</eat_row_on_failure>
@@ -704,7 +704,7 @@
       <schema_name/>
     </partitioning>
     <schema/>
-    <table>user_dim</table>
+    <table>dimension_user</table>
     <connection>${DB_NAME_DWH}</connection>
     <commit>100</commit>
     <update>N</update>

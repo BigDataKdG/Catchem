@@ -499,14 +499,14 @@
     </attributes>
   </connection>
   <connection>
-    <name>catchem</name>
+    <name>${DB_NAME}</name>
     <server>127.0.0.1</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>catchem</database>
+    <database>${DB_NAME}</database>
     <port>1433</port>
-    <username>sa</username>
-    <password>Encrypted 2be98afc86aa7f2d5a71b9c7fdd99aace</password>
+    <username>${DB_USERNAME}</username>
+    <password>${DB_PASSWORD}</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -770,8 +770,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
+    <connection>${DB_NAME}</connection>
+    <sql>select TOP(5000) CONVERT(varchar(255), u.id, 2) u_id, first_name, last_name, street, number, CONVERT(varchar(255), city_city_id, 2) city_city_id, CONVERT(varchar(255), t.id, 2) t_id, count(*) logs_found
 FROM dbo.user_table u
 LEFT JOIN dbo.treasure_log t ON u.id = t.hunter_id
 GROUP by u.id, first_name, last_name, street, number, city_city_id, t.id
@@ -805,8 +805,8 @@ order by 1 asc;</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>catchem</connection>
-    <sql>select CONVERT(varchar(255), u.id, 2) u_id, count(*) 'number_treasures'
+    <connection>${DB_NAME}</connection>
+    <sql>select TOP(5000) CONVERT(varchar(255), u.id, 2) u_id, count(*) 'number_treasures'
 FROM dbo.treasure 
 RIGHT JOIN dbo.user_table u on owner_id = u.id
 group by u.id, owner_id

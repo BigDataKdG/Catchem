@@ -622,13 +622,23 @@
       </date>
       <field>
         <name>timestamp</name>
-        <lookup>Date</lookup>
+        <lookup>TIMESTAMP</lookup>
         <update>Update</update>
       </field>
       <field>
-        <name>weather_id</name>
+        <name>weather_id_1</name>
         <lookup>weather_id</lookup>
         <update>Insert</update>
+      </field>
+      <field>
+        <name>description</name>
+        <lookup>description</lookup>
+        <update>Punch through</update>
+      </field>
+      <field>
+        <name>city_name</name>
+        <lookup>name</lookup>
+        <update>Punch through</update>
       </field>
       <return>
         <name>surrogate_key</name>
@@ -790,9 +800,9 @@
       </value>
       <value>
         <name>id</name>
-        <rename>wheather_id</rename>
+        <rename>weather_id</rename>
         <default/>
-        <type>String</type>
+        <type>BigNumber</type>
       </value>
     </lookup>
     <cluster_schema/>

@@ -2554,7 +2554,7 @@ if (month_number == 6  || month_number == 7 || month_number == 8) {
     <schema/>
     <table>dimension_day</table>
     <commit>1000</commit>
-    <truncate>Y</truncate>
+    <truncate>N</truncate>
     <ignore_errors>N</ignore_errors>
     <use_batch>Y</use_batch>
     <specify_fields>N</specify_fields>
